@@ -1,8 +1,7 @@
-package com.kitchenhack.apikitchen.model;
+package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "receta")
