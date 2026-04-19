@@ -1,6 +1,6 @@
-package com.kitchenhack.apikitchen.repository;
+package com.kitchenhack.apikitchen.repositories;
 
-import com.kitchenhack.apikitchen.model.Recipe;
+import com.kitchenhack.apikitchen.entities.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

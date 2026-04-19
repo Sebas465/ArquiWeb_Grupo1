@@ -1,7 +1,7 @@
-package com.kitchenhack.apikitchen.controller;
+package com.kitchenhack.apikitchen.controllers;
 
-import com.kitchenhack.apikitchen.model.Recipe;
-import com.kitchenhack.apikitchen.service.RecipeService;
+import com.kitchenhack.apikitchen.entities.Recipe;
+import com.kitchenhack.apikitchen.servicesimplements.RecipeServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import java.util.List;
 public class RecipeController {
 
     @Autowired
-    private RecipeService recipeService;
+    private RecipeServiceImplement recipeService;
 
     // Endpoint: GET /api/recipes/explore
     @GetMapping("/explore")

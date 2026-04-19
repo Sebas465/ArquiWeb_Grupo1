@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class NotificacionServiceImpl implements INotificacionService {
+public class NotificationServiceImplement implements INotificacionService {
 
     @Autowired
     private NotificacionRepository notificacionRepository;
