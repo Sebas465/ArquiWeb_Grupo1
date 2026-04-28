@@ -16,13 +16,38 @@ public class Ingrediente {
     @Column(name = "tipo_ingrediente_id")
     private Integer tipoIngredienteId;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Constructor sin-args requerido por JPA/Hibernate
+    public Ingrediente() {
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public Ingrediente(Long id, String nombre, Integer tipoIngredienteId) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipoIngredienteId = tipoIngredienteId;
+    }
 
-    public Integer getTipoIngredienteId() { return tipoIngredienteId; }
-    public void setTipoIngredienteId(Integer tipoIngredienteId) { this.tipoIngredienteId = tipoIngredienteId; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getTipoIngredienteId() {
+        return tipoIngredienteId;
+    }
+
+    public void setTipoIngredienteId(Integer tipoIngredienteId) {
+        this.tipoIngredienteId = tipoIngredienteId;
+    }
 }
 

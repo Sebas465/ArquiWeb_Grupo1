@@ -47,43 +47,127 @@ public class Recipe {
     @Column(name = "publicada")
     private Boolean published;
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Constructor sin-args requerido por JPA / ModelMapper
+    public Recipe() {
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public Recipe(Long id, String title, String description, String imageUrl, Integer categoryId, BigDecimal totalCalories, BigDecimal proteinGrams, BigDecimal carbsGrams, BigDecimal fatGrams, Integer prepTimeMinutes, String difficulty, BigDecimal averageRating, Boolean published) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+        this.totalCalories = totalCalories;
+        this.proteinGrams = proteinGrams;
+        this.carbsGrams = carbsGrams;
+        this.fatGrams = fatGrams;
+        this.prepTimeMinutes = prepTimeMinutes;
+        this.difficulty = difficulty;
+        this.averageRating = averageRating;
+        this.published = published;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public String getTitle() {
+        return title;
+    }
 
-    public BigDecimal getTotalCalories() { return totalCalories; }
-    public void setTotalCalories(BigDecimal totalCalories) { this.totalCalories = totalCalories; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public BigDecimal getProteinGrams() { return proteinGrams; }
-    public void setProteinGrams(BigDecimal proteinGrams) { this.proteinGrams = proteinGrams; }
+    public String getDescription() {
+        return description;
+    }
 
-    public BigDecimal getCarbsGrams() { return carbsGrams; }
-    public void setCarbsGrams(BigDecimal carbsGrams) { this.carbsGrams = carbsGrams; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public BigDecimal getFatGrams() { return fatGrams; }
-    public void setFatGrams(BigDecimal fatGrams) { this.fatGrams = fatGrams; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public Integer getPrepTimeMinutes() { return prepTimeMinutes; }
-    public void setPrepTimeMinutes(Integer prepTimeMinutes) { this.prepTimeMinutes = prepTimeMinutes; }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-    public String getDifficulty() { return difficulty; }
-    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+    public Integer getCategoryId() {
+        return categoryId;
+    }
 
-    public BigDecimal getAverageRating() { return averageRating; }
-    public void setAverageRating(BigDecimal averageRating) { this.averageRating = averageRating; }
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 
-    public Boolean getPublished() { return published; }
-    public void setPublished(Boolean published) { this.published = published; }
+    public BigDecimal getTotalCalories() {
+        return totalCalories;
+    }
+
+    public void setTotalCalories(BigDecimal totalCalories) {
+        this.totalCalories = totalCalories;
+    }
+
+    public BigDecimal getProteinGrams() {
+        return proteinGrams;
+    }
+
+    public void setProteinGrams(BigDecimal proteinGrams) {
+        this.proteinGrams = proteinGrams;
+    }
+
+    public BigDecimal getCarbsGrams() {
+        return carbsGrams;
+    }
+
+    public void setCarbsGrams(BigDecimal carbsGrams) {
+        this.carbsGrams = carbsGrams;
+    }
+
+    public BigDecimal getFatGrams() {
+        return fatGrams;
+    }
+
+    public void setFatGrams(BigDecimal fatGrams) {
+        this.fatGrams = fatGrams;
+    }
+
+    public Integer getPrepTimeMinutes() {
+        return prepTimeMinutes;
+    }
+
+    public void setPrepTimeMinutes(Integer prepTimeMinutes) {
+        this.prepTimeMinutes = prepTimeMinutes;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public BigDecimal getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
 }

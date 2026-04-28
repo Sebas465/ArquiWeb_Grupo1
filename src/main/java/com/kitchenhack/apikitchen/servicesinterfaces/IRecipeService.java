@@ -1,22 +1,29 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
-import com.kitchenhack.apikitchen.dtos.RecipeDTO;
+import com.kitchenhack.apikitchen.entities.Recipe;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface IRecipeService {
 
-    List<RecipeDTO> listarTodos();
+    // Lista todas las recetas (entidades).
+    List<Recipe> list();
 
-    RecipeDTO buscarPorId(Long id);
+    // Inserta una nueva receta.
+    Recipe insert(Recipe recipe);
 
-    RecipeDTO crear(RecipeDTO dto);
+    // Actualiza una receta existente.
+    void update(Recipe recipe);
 
-    RecipeDTO actualizar(Long id, RecipeDTO dto);
+    // Busca por id.
+    Optional<Recipe> listId(Long id);
 
-    void eliminar(Long id);
+    // Elimina por id.
+    void delete(Long id);
 
-    List<RecipeDTO> explorarRecetasPublicadas(Integer categoriaId, BigDecimal maxCal);
+    // Explora recetas publicadas (filtrado simple) y devuelve entidades.
+    List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal);
 }
 

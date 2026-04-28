@@ -1,19 +1,25 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
-import com.kitchenhack.apikitchen.dtos.ProgresoSaludDTO;
+import com.kitchenhack.apikitchen.entities.ProgresoSalud;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IProgresoSaludService {
 
-    List<ProgresoSaludDTO> listarTodos();
+    // Lista todas las entidades ProgresoSalud.
+    List<ProgresoSalud> list();
 
-    ProgresoSaludDTO buscarPorId(Integer id);
+    // Inserta una nueva entidad.
+    ProgresoSalud insert(ProgresoSalud progresoSalud);
 
-    ProgresoSaludDTO crear(ProgresoSaludDTO dto);
+    // Actualiza una entidad existente.
+    void update(ProgresoSalud progresoSalud);
 
-    ProgresoSaludDTO actualizar(Integer id, ProgresoSaludDTO dto);
+    // Busca por id.
+    Optional<ProgresoSalud> listId(Integer id);
 
-    void eliminar(Integer id);
+    // Elimina por id.
+    void delete(Integer id);
 }
 

@@ -17,13 +17,38 @@ public class ProgresoSalud {
     @Column(columnDefinition = "TEXT")
     private String alergias;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    // Constructor sin-argumentos requerido por JPA
+    public ProgresoSalud() {
+    }
 
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+    public ProgresoSalud(Integer id, Integer usuarioId, String alergias) {
+        this.id = id;
+        this.usuarioId = usuarioId;
+        this.alergias = alergias;
+    }
 
-    public String getAlergias() { return alergias; }
-    public void setAlergias(String alergias) { this.alergias = alergias; }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getAlergias() {
+        return alergias;
+    }
+
+    public void setAlergias(String alergias) {
+        this.alergias = alergias;
+    }
 }
 

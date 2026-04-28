@@ -6,13 +6,28 @@ public class IngredienteDTO {
     private String nombre;
     private Integer tipoIngredienteId;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getTipoIngredienteId() { return tipoIngredienteId; }
-    public void setTipoIngredienteId(Integer tipoIngredienteId) { this.tipoIngredienteId = tipoIngredienteId; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getTipoIngredienteId() {
+        return tipoIngredienteId;
+    }
+
+    public void setTipoIngredienteId(Integer tipoIngredienteId) {
+        this.tipoIngredienteId = tipoIngredienteId;
+    }
 }
 

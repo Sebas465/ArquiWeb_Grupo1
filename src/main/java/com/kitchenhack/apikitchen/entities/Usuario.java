@@ -22,18 +22,55 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    // Constructor sin-args requerido por JPA/Hibernate
+    public Usuario() {
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public Usuario(Integer id, String username, String nombre, String apellido, String email) {
+        this.id = id;
+        this.username = username;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getApellido() { return apellido; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

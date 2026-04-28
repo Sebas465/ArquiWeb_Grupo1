@@ -1,24 +1,28 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
-import com.kitchenhack.apikitchen.dtos.IngredienteDTO;
-import com.kitchenhack.apikitchen.dtos.IngredienteDetailDTO;
+import com.kitchenhack.apikitchen.entities.Ingrediente;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IIngredienteService {
 
-    List<IngredienteDTO> listarCrud();
+    // Lista todos los ingredientes registrados.
+    List<Ingrediente> list();
 
-    IngredienteDTO buscarCrudPorId(Long id);
+    // Guarda un nuevo ingrediente en la base de datos.
+    Ingrediente insert(Ingrediente ingrediente);
 
-    IngredienteDTO crear(IngredienteDTO dto);
+    // Persiste cambios sobre un ingrediente existente.
+    void update(Ingrediente ingrediente);
 
-    IngredienteDTO actualizar(Long id, IngredienteDTO dto);
+    // Busca un ingrediente por su identificador.
+    Optional<Ingrediente> listId(Long id);
 
-    void eliminar(Long id);
+    // Elimina un ingrediente por su identificador.
+    void delete(Long id);
 
-    List<IngredienteDetailDTO> listarPorTipo(Integer tipoIngredienteId);
+    // Lista ingredientes por tipo (filtro opcional en GET /ingredientes?tipo=1)
+    List<Ingrediente> findByTipo(Integer tipoIngredienteId);
 
-    IngredienteDetailDTO obtenerPorId(Long id, Integer usuarioId);
 }
-

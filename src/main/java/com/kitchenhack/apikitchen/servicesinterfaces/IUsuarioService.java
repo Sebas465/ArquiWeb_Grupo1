@@ -1,19 +1,25 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
-import com.kitchenhack.apikitchen.dtos.UsuarioDTO;
+import com.kitchenhack.apikitchen.entities.Usuario;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUsuarioService {
 
-    List<UsuarioDTO> listarTodos();
+    // Lista todos los usuarios registrados.
+    List<Usuario> list();
 
-    UsuarioDTO buscarPorId(Integer id);
+    // Guarda un nuevo usuario en la base de datos.
+    Usuario insert(Usuario usuario);
 
-    UsuarioDTO crear(UsuarioDTO dto);
+    // Persiste cambios sobre un usuario existente.
+    void update(Usuario usuario);
 
-    UsuarioDTO actualizar(Integer id, UsuarioDTO dto);
+    // Busca un usuario por su identificador.
+    Optional<Usuario> listId(int id);
 
-    void eliminar(Integer id);
+    // Elimina un usuario por su identificador.
+    void delete(int id);
 }
 

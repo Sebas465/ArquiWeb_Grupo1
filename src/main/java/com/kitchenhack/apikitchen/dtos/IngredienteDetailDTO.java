@@ -14,28 +14,68 @@ public class IngredienteDetailDTO {
     private List<String> alergenos;
     private Boolean alerta;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public BigDecimal getTotalCalories() { return totalCalories; }
-    public void setTotalCalories(BigDecimal totalCalories) { this.totalCalories = totalCalories; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public BigDecimal getProteinGrams() { return proteinGrams; }
-    public void setProteinGrams(BigDecimal proteinGrams) { this.proteinGrams = proteinGrams; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public BigDecimal getCarbsGrams() { return carbsGrams; }
-    public void setCarbsGrams(BigDecimal carbsGrams) { this.carbsGrams = carbsGrams; }
+    public BigDecimal getTotalCalories() {
+        return totalCalories;
+    }
 
-    public BigDecimal getFatGrams() { return fatGrams; }
-    public void setFatGrams(BigDecimal fatGrams) { this.fatGrams = fatGrams; }
+    public void setTotalCalories(BigDecimal totalCalories) {
+        this.totalCalories = totalCalories;
+    }
 
-    public List<String> getAlergenos() { return alergenos; }
-    public void setAlergenos(List<String> alergenos) { this.alergenos = alergenos; }
+    public BigDecimal getProteinGrams() {
+        return proteinGrams;
+    }
 
-    public Boolean getAlerta() { return alerta; }
-    public void setAlerta(Boolean alerta) { this.alerta = alerta; }
+    public void setProteinGrams(BigDecimal proteinGrams) {
+        this.proteinGrams = proteinGrams;
+    }
+
+    public BigDecimal getCarbsGrams() {
+        return carbsGrams;
+    }
+
+    public void setCarbsGrams(BigDecimal carbsGrams) {
+        this.carbsGrams = carbsGrams;
+    }
+
+    public BigDecimal getFatGrams() {
+        return fatGrams;
+    }
+
+    public void setFatGrams(BigDecimal fatGrams) {
+        this.fatGrams = fatGrams;
+    }
+
+    public List<String> getAlergenos() {
+        return alergenos;
+    }
+
+    public void setAlergenos(List<String> alergenos) {
+        this.alergenos = alergenos;
+    }
+
+    public Boolean getAlerta() {
+        return alerta;
+    }
+
+    public void setAlerta(Boolean alerta) {
+        this.alerta = alerta;
+    }
 }
 

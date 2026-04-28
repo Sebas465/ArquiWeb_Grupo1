@@ -6,13 +6,28 @@ public class ProgresoSaludDTO {
     private Integer usuarioId;
     private String alergias;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getAlergias() { return alergias; }
-    public void setAlergias(String alergias) { this.alergias = alergias; }
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getAlergias() {
+        return alergias;
+    }
+
+    public void setAlergias(String alergias) {
+        this.alergias = alergias;
+    }
 }
 
