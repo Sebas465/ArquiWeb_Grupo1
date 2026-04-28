@@ -1,38 +1,12 @@
-package com.kitchenhack.apikitchen.entities;
+package com.kitchenhack.apikitchen.dtos;
 
-import jakarta.persistence.*;
+public class UsuarioDTO {
 
-@Entity
-@Table(name = "usuario")
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(nullable = false, unique = true, length = 80)
     private String username;
-
-    @Column(nullable = false, length = 100)
     private String nombre;
-
-    @Column(nullable = false, length = 100)
     private String apellido;
-
-    @Column(nullable = false, unique = true, length = 150)
     private String email;
-
-    // Constructor sin-args requerido por JPA/Hibernate
-    public Usuario() {
-    }
-
-    public Usuario(Integer id, String username, String nombre, String apellido, String email) {
-        this.id = id;
-        this.username = username;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-    }
 
     public Integer getId() {
         return id;
@@ -74,3 +48,4 @@ public class Usuario {
         this.email = email;
     }
 }
+
