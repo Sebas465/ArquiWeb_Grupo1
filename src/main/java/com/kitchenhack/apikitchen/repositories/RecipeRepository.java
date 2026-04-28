@@ -10,4 +10,6 @@ import java.util.List;
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     // Busca todas las recetas donde el campo 'publicada' sea true
     List<Recipe> findByPublishedTrue();
+
+    List<Recipe> findByPublishedTrueOrderByAverageRatingDesc();
 }

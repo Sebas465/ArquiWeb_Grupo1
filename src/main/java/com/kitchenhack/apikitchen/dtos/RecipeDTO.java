@@ -1,53 +1,23 @@
-package com.kitchenhack.apikitchen.entities;
+package com.kitchenhack.apikitchen.dtos;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "receta")
-public class Recipe {
+public class RecipeDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "titulo", nullable = false)
     private String title;
-
-    @Column(name = "descripcion")
     private String description;
-
-    @Column(name = "image_url")
     private String imageUrl;
-
-    @Column(name = "categoria_receta")
     private Integer categoryId;
-
-    @Column(name = "calorias_totales")
     private BigDecimal totalCalories;
-
-    @Column(name = "proteinas_g")
     private BigDecimal proteinGrams;
-
-    @Column(name = "carbohidratos_g")
     private BigDecimal carbsGrams;
-
-    @Column(name = "grasas_g")
     private BigDecimal fatGrams;
-
-    @Column(name = "tiempo_preparacion")
     private Integer prepTimeMinutes;
-
-    @Column(name = "dificultad")
     private String difficulty;
-
-    @Column(name = "calificacion_promedio")
     private BigDecimal averageRating;
-
-    @Column(name = "publicada")
     private Boolean published;
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -87,3 +57,4 @@ public class Recipe {
     public Boolean getPublished() { return published; }
     public void setPublished(Boolean published) { this.published = published; }
 }
+
