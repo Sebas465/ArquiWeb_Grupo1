@@ -69,6 +69,7 @@ public class UsuarioController {
         u.setNombre(dto.getNombre());
         u.setApellido(dto.getApellido());
         u.setEmail(dto.getEmail());
+        u.setContrasenia(dto.getContrasenia());
 
         usuarioService.update(u);
 

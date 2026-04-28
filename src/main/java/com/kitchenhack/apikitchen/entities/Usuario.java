@@ -22,6 +22,9 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
+    @Column(nullable = false, unique = true, length = 30)
+    private String contrasenia;
+
     // Constructor sin-args requerido por JPA/Hibernate
     public Usuario() {
     }
@@ -32,6 +35,7 @@ public class Usuario {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
+        this.contrasenia=contrasenia;
     }
 
     public Integer getId() {
@@ -73,4 +77,13 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
 }
