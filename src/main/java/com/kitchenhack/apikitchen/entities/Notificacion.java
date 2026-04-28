@@ -30,24 +30,69 @@ public class Notificacion {
     @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Notificacion(Integer id, Usuario usuario, String tipo, String titulo, String cuerpo, Boolean leida, LocalDateTime fechaEnvio) {
+        this.id = id;
+        this.usuario = usuario;
+        this.tipo = tipo;
+        this.titulo = titulo;
+        this.cuerpo = cuerpo;
+        this.leida = leida;
+        this.fechaEnvio = fechaEnvio;
+    }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
-    public String getCuerpo() { return cuerpo; }
-    public void setCuerpo(String cuerpo) { this.cuerpo = cuerpo; }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-    public Boolean getLeida() { return leida; }
-    public void setLeida(Boolean leida) { this.leida = leida; }
+    public String getTipo() {
+        return tipo;
+    }
 
-    public LocalDateTime getFechaEnvio() { return fechaEnvio; }
-    public void setFechaEnvio(LocalDateTime fechaEnvio) { this.fechaEnvio = fechaEnvio; }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getCuerpo() {
+        return cuerpo;
+    }
+
+    public void setCuerpo(String cuerpo) {
+        this.cuerpo = cuerpo;
+    }
+
+    public Boolean getLeida() {
+        return leida;
+    }
+
+    public void setLeida(Boolean leida) {
+        this.leida = leida;
+    }
+
+    public LocalDateTime getFechaEnvio() {
+        return fechaEnvio;
+    }
+
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
+        this.fechaEnvio = fechaEnvio;
+    }
 }
