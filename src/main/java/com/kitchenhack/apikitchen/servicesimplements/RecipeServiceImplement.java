@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
@@ -45,9 +43,6 @@ public class RecipeServiceImplement implements IRecipeService {
 
     @Override
     public List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal) {
-        return recipeRepository.findByPublishedTrueOrderByAverageRatingDesc().stream()
-                .filter(recipe -> categoriaId == null || Objects.equals(recipe.getCategoryId(), categoriaId))
-                .filter(recipe -> maxCal == null || (recipe.getTotalCalories() != null && recipe.getTotalCalories().compareTo(maxCal) <= 0))
-                .collect(Collectors.toList());
+        return recipeRepository.findPublishedRecipes(categoriaId, maxCal);
     }
 }
