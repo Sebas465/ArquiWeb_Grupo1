@@ -33,7 +33,7 @@ public class IngredienteController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre", required = true) String nombre) {
+	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre") String nombre) {
 		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombre(nombre);
 		List<IngredienteDTO> listaIngredientes = ingredientes
@@ -44,7 +44,7 @@ public class IngredienteController {
 
 	@GetMapping("/search-advanced")
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
-			@RequestParam(name = "nombre", required = true) String nombre,
+			@RequestParam(name = "nombre") String nombre,
 			@RequestParam(name = "tipo", required = false) Integer tipo) {
 		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
@@ -90,7 +90,7 @@ public class IngredienteController {
 		// Reutilizar la entidad encontrada y modificar solo los campos permitidos.
 		Ingrediente ingrediente = existente.get();
 		ingrediente.setNombre(dto.getNombre());
-		ingrediente.setTipoIngredienteId(dto.getTipoIngredienteId());
+		// Nota: la relación idEtiqueta se puede actualizar si es necesario con lógica adicional
 
 		ingredienteService.update(ingrediente);
 

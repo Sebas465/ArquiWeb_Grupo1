@@ -4,7 +4,7 @@ public class IngredienteDTO {
 
     private Long id;
     private String nombre;
-    private Integer tipoIngredienteId;
+    private Integer idEtiqueta;
 
     public Long getId() {
         return id;
@@ -22,12 +22,12 @@ public class IngredienteDTO {
         this.nombre = nombre;
     }
 
-    public Integer getTipoIngredienteId() {
-        return tipoIngredienteId;
+    public Integer getIdEtiqueta() {
+        return idEtiqueta;
     }
 
-    public void setTipoIngredienteId(Integer tipoIngredienteId) {
-        this.tipoIngredienteId = tipoIngredienteId;
+    public void setIdEtiqueta(Integer idEtiqueta) {
+        this.idEtiqueta = idEtiqueta;
     }
 }
 

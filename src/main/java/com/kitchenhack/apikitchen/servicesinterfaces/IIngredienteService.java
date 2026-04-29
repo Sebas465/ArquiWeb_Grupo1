@@ -22,12 +22,12 @@ public interface IIngredienteService {
     // Elimina un ingrediente por su identificador.
     void delete(Long id);
 
-    // Lista ingredientes por tipo (filtro opcional en GET /ingredientes?tipo=1)
-    List<Ingrediente> findByTipo(Integer tipoIngredienteId);
+    // Lista ingredientes por tipo/etiqueta (filtro opcional en GET /ingredientes?tipo=1)
+    List<Ingrediente> findByTipo(Integer idEtiqueta);
 
     // Busca ingredientes por nombre (búsqueda parcial, insensible a mayúsculas)
     List<Ingrediente> searchByNombre(String nombre);
 
-    // Busca ingredientes por nombre y tipo simultáneamente
-    List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId);
+    // Busca ingredientes por nombre y tipo/etiqueta simultáneamente
+    List<Ingrediente> searchByNombreAndTipo(String nombre, Integer idEtiqueta);
 }

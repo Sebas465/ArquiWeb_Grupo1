@@ -41,8 +41,8 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public List<Ingrediente> findByTipo(Integer tipoIngredienteId) {
-        return ingredienteRepository.findByTipoIngredienteId(tipoIngredienteId);
+    public List<Ingrediente> findByTipo(Integer idEtiqueta) {
+        return ingredienteRepository.findByIdEtiqueta(idEtiqueta);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId) {
-        return ingredienteRepository.searchByNombreAndTipo(nombre, tipoIngredienteId);
+    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer idEtiqueta) {
+        return ingredienteRepository.searchByNombreAndTipo(nombre, idEtiqueta);
     }
 }
 
