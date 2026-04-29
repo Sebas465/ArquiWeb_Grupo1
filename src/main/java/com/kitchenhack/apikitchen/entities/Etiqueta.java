@@ -3,22 +3,26 @@ package com.kitchenhack.apikitchen.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "rol")
-public class Rol {
+@Table(name = "etiqueta")
+public class Etiqueta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
-    public Rol() {
+    @Column(nullable = false, length = 50)
+    private String grupo;
+
+    public Etiqueta() {
     }
 
-    public Rol(Integer id, String nombre) {
+    public Etiqueta(Integer id, String nombre, String grupo) {
         this.id = id;
         this.nombre = nombre;
+        this.grupo = grupo;
     }
 
     public Integer getId() {
@@ -36,4 +40,13 @@ public class Rol {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
 }
+

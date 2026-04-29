@@ -1,7 +1,7 @@
 package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "receta")
@@ -17,54 +17,35 @@ public class Recipe {
     @Column(name = "descripcion")
     private String description;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "id_autor", nullable = false)
+    private Usuario idAutor;
 
-    @Column(name = "categoria_receta")
-    private Integer categoryId;
-
-    @Column(name = "calorias_totales")
-    private BigDecimal totalCalories;
-
-    @Column(name = "proteinas_g")
-    private BigDecimal proteinGrams;
-
-    @Column(name = "carbohidratos_g")
-    private BigDecimal carbsGrams;
-
-    @Column(name = "grasas_g")
-    private BigDecimal fatGrams;
-
-    @Column(name = "tiempo_preparacion")
+    @Column(name = "tiempo_min")
     private Integer prepTimeMinutes;
 
     @Column(name = "dificultad")
     private String difficulty;
 
-    @Column(name = "calificacion_promedio")
-    private BigDecimal averageRating;
-
     @Column(name = "publicada")
     private Boolean published;
 
-    // Constructor sin-args requerido por JPA / ModelMapper
+    @Column(name = "ultima_act")
+    private LocalDateTime ultimaActualizacion;
+
+    // Constructor sin-args requerido por JPA
     public Recipe() {
     }
 
-    public Recipe(Long id, String title, String description, String imageUrl, Integer categoryId, BigDecimal totalCalories, BigDecimal proteinGrams, BigDecimal carbsGrams, BigDecimal fatGrams, Integer prepTimeMinutes, String difficulty, BigDecimal averageRating, Boolean published) {
+    public Recipe(Long id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Boolean published, LocalDateTime ultimaActualizacion) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-        this.totalCalories = totalCalories;
-        this.proteinGrams = proteinGrams;
-        this.carbsGrams = carbsGrams;
-        this.fatGrams = fatGrams;
+        this.idAutor = idAutor;
         this.prepTimeMinutes = prepTimeMinutes;
         this.difficulty = difficulty;
-        this.averageRating = averageRating;
         this.published = published;
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 
     public Long getId() {
@@ -91,52 +72,12 @@ public class Recipe {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Usuario getIdAutor() {
+        return idAutor;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public BigDecimal getTotalCalories() {
-        return totalCalories;
-    }
-
-    public void setTotalCalories(BigDecimal totalCalories) {
-        this.totalCalories = totalCalories;
-    }
-
-    public BigDecimal getProteinGrams() {
-        return proteinGrams;
-    }
-
-    public void setProteinGrams(BigDecimal proteinGrams) {
-        this.proteinGrams = proteinGrams;
-    }
-
-    public BigDecimal getCarbsGrams() {
-        return carbsGrams;
-    }
-
-    public void setCarbsGrams(BigDecimal carbsGrams) {
-        this.carbsGrams = carbsGrams;
-    }
-
-    public BigDecimal getFatGrams() {
-        return fatGrams;
-    }
-
-    public void setFatGrams(BigDecimal fatGrams) {
-        this.fatGrams = fatGrams;
+    public void setIdAutor(Usuario idAutor) {
+        this.idAutor = idAutor;
     }
 
     public Integer getPrepTimeMinutes() {
@@ -155,19 +96,19 @@ public class Recipe {
         this.difficulty = difficulty;
     }
 
-    public BigDecimal getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(BigDecimal averageRating) {
-        this.averageRating = averageRating;
-    }
-
     public Boolean getPublished() {
         return published;
     }
 
     public void setPublished(Boolean published) {
         this.published = published;
+    }
+
+    public LocalDateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
+    }
+
+    public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 }

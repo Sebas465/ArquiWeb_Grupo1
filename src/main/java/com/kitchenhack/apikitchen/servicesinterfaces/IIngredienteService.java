@@ -25,4 +25,9 @@ public interface IIngredienteService {
     // Lista ingredientes por tipo (filtro opcional en GET /ingredientes?tipo=1)
     List<Ingrediente> findByTipo(Integer tipoIngredienteId);
 
+    // Busca ingredientes por nombre (búsqueda parcial, insensible a mayúsculas)
+    List<Ingrediente> searchByNombre(String nombre);
+
+    // Busca ingredientes por nombre y tipo simultáneamente
+    List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId);
 }
