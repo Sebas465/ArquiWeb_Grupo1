@@ -1,48 +1,31 @@
 package com.kitchenhack.apikitchen.entities;
 
+import com.kitchenhack.apikitchen.entities.Usuario;
 import jakarta.persistence.*;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "Rol")
-public class Rol {
+@Table(name = "rol", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "rol"})})
+public class Rol implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "nombre",length = 50, nullable = false)
-    private String nombre;
-    @Column(name = "descripcion",columnDefinition = "TEXT")
+    private Long id;
+
+    private String rol;
     private String descripcion;
 
-    public Rol() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario usuario;
 
-    public Rol(Integer id, String nombre, String descripcion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
 
-    public Integer getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }
