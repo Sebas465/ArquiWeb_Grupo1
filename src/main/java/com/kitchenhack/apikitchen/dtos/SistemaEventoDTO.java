@@ -2,15 +2,15 @@ package com.kitchenhack.apikitchen.dtos;
 
 import java.time.LocalDateTime;
 
-public class NotificacionDTO {
+public class SistemaEventoDTO {
 
     private Integer id;
     private Integer idUsuario;
     private String tipo;
     private String titulo;
-    private String cuerpo;
-    private Boolean leida;
-    private LocalDateTime fechaEnvio;
+    private String contenido;
+    private Boolean leidoGuardado;
+    private LocalDateTime fecha;
 
     public Integer getId() {
         return id;
@@ -44,27 +44,28 @@ public class NotificacionDTO {
         this.titulo = titulo;
     }
 
-    public String getCuerpo() {
-        return cuerpo;
+    public String getContenido() {
+        return contenido;
     }
 
-    public void setCuerpo(String cuerpo) {
-        this.cuerpo = cuerpo;
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
-    public Boolean getLeida() {
-        return leida;
+    public Boolean getLeidoGuardado() {
+        return leidoGuardado;
     }
 
-    public void setLeida(Boolean leida) {
-        this.leida = leida;
+    public void setLeidoGuardado(Boolean leidoGuardado) {
+        this.leidoGuardado = leidoGuardado;
     }
 
-    public LocalDateTime getFechaEnvio() {
-        return fechaEnvio;
+    public LocalDateTime getFecha() {
+        return fecha;
     }
 
-    public void setFechaEnvio(LocalDateTime fechaEnvio) {
-        this.fechaEnvio = fechaEnvio;
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
     }
 }
+

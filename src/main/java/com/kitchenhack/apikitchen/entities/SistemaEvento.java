@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notificacion")
-public class Notificacion {
+@Table(name = "sistema_evento")
+public class SistemaEvento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,32 +15,32 @@ public class Notificacion {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 30)
     private String tipo;
 
     @Column(nullable = false, length = 200)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
-    private String cuerpo;
+    @Column(name = "contenido", columnDefinition = "TEXT")
+    private String contenido;
 
-    @Column(nullable = false)
-    private Boolean leida = false;
+    @Column(name = "leido_guardado")
+    private Boolean leidoGuardado = false;
 
-    @Column(name = "fecha_envio")
-    private LocalDateTime fechaEnvio;
+    @Column(name = "fecha")
+    private LocalDateTime fecha;
 
-    public Notificacion() {
+    public SistemaEvento() {
     }
 
-    public Notificacion(Integer id, Usuario usuario, String tipo, String titulo, String cuerpo, Boolean leida, LocalDateTime fechaEnvio) {
+    public SistemaEvento(Integer id, Usuario usuario, String tipo, String titulo, String contenido, Boolean leidoGuardado, LocalDateTime fecha) {
         this.id = id;
         this.usuario = usuario;
         this.tipo = tipo;
         this.titulo = titulo;
-        this.cuerpo = cuerpo;
-        this.leida = leida;
-        this.fechaEnvio = fechaEnvio;
+        this.contenido = contenido;
+        this.leidoGuardado = leidoGuardado;
+        this.fecha = fecha;
     }
 
     public Integer getId() {
@@ -75,27 +75,28 @@ public class Notificacion {
         this.titulo = titulo;
     }
 
-    public String getCuerpo() {
-        return cuerpo;
+    public String getContenido() {
+        return contenido;
     }
 
-    public void setCuerpo(String cuerpo) {
-        this.cuerpo = cuerpo;
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
-    public Boolean getLeida() {
-        return leida;
+    public Boolean getLeidoGuardado() {
+        return leidoGuardado;
     }
 
-    public void setLeida(Boolean leida) {
-        this.leida = leida;
+    public void setLeidoGuardado(Boolean leidoGuardado) {
+        this.leidoGuardado = leidoGuardado;
     }
 
-    public LocalDateTime getFechaEnvio() {
-        return fechaEnvio;
+    public LocalDateTime getFecha() {
+        return fecha;
     }
 
-    public void setFechaEnvio(LocalDateTime fechaEnvio) {
-        this.fechaEnvio = fechaEnvio;
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
     }
 }
+
