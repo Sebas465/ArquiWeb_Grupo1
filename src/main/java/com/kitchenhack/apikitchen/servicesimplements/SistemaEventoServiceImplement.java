@@ -21,18 +21,18 @@ public class SistemaEventoServiceImplement implements ISistemaEventoService {
     }
 
     @Override
-    public SistemaEvento insert(SistemaEvento sistemaEvento) {
-        return sistemaEventoRepository.save(sistemaEvento);
-    }
-
-    @Override
-    public void update(SistemaEvento sistemaEvento) {
-        sistemaEventoRepository.save(sistemaEvento);
-    }
-
-    @Override
     public Optional<SistemaEvento> listId(Integer id) {
         return sistemaEventoRepository.findById(id);
+    }
+
+    @Override
+    public SistemaEvento insert(SistemaEvento evento) {
+        return sistemaEventoRepository.save(evento);
+    }
+
+    @Override
+    public void update(SistemaEvento evento) {
+        sistemaEventoRepository.save(evento);
     }
 
     @Override
@@ -40,4 +40,3 @@ public class SistemaEventoServiceImplement implements ISistemaEventoService {
         sistemaEventoRepository.deleteById(id);
     }
 }
-

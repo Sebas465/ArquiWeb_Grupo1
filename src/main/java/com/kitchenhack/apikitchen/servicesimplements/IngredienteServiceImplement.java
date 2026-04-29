@@ -21,6 +21,11 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
+    public Optional<Ingrediente> listId(Long id) {
+        return ingredienteRepository.findById(id);
+    }
+
+    @Override
     public Ingrediente insert(Ingrediente ingrediente) {
         return ingredienteRepository.save(ingrediente);
     }
@@ -31,18 +36,13 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public Optional<Ingrediente> listId(Long id) {
-        return ingredienteRepository.findById(id);
-    }
-
-    @Override
     public void delete(Long id) {
         ingredienteRepository.deleteById(id);
     }
 
     @Override
-    public List<Ingrediente> findByTipo(Integer tipoIngredienteId) {
-        return ingredienteRepository.findByTipoIngredienteId(tipoIngredienteId);
+    public List<Ingrediente> findByTipo(Integer tipo) {
+        return ingredienteRepository.findByTipo(tipo);
     }
 
     @Override
@@ -51,8 +51,7 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId) {
-        return ingredienteRepository.searchByNombreAndTipo(nombre, tipoIngredienteId);
+    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipo) {
+        return ingredienteRepository.searchByNombreAndTipo(nombre, tipo);
     }
 }
-

@@ -110,5 +110,8 @@ public class Ingrediente {
     public void setGrasas100(Double grasas100) {
         this.grasas100 = grasas100;
     }
+
+    public void setTipoIngredienteId(Integer tipoIngredienteId) {
+    }
 }
 

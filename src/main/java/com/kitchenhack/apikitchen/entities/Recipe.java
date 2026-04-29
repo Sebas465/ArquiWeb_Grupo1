@@ -1,6 +1,8 @@
 package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -110,5 +112,37 @@ public class Recipe {
 
     public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public Recipe(String description, Long id, String title, LocalDateTime ultimaActualizacion, Boolean published, String difficulty, Integer prepTimeMinutes, Usuario idAutor) {
+        this.description = description;
+        this.id = id;
+        this.title = title;
+        this.ultimaActualizacion = ultimaActualizacion;
+        this.published = published;
+        this.difficulty = difficulty;
+        this.prepTimeMinutes = prepTimeMinutes;
+        this.idAutor = idAutor;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+    }
+
+    public void setFatGrams(BigDecimal fatGrams) {
+    }
+
+    public void setImageUrl(String imageUrl) {
+    }
+
+    public void setCategoryId(Integer categoryId) {
+    }
+
+    public void setTotalCalories(BigDecimal totalCalories) {
+    }
+
+    public void setProteinGrams(BigDecimal proteinGrams) {
+    }
+
+    public void setCarbsGrams(BigDecimal carbsGrams) {
     }
 }

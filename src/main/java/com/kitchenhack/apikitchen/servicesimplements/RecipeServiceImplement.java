@@ -22,6 +22,11 @@ public class RecipeServiceImplement implements IRecipeService {
     }
 
     @Override
+    public Optional<Recipe> listId(Long id) {
+        return recipeRepository.findById(id);
+    }
+
+    @Override
     public Recipe insert(Recipe recipe) {
         return recipeRepository.save(recipe);
     }
@@ -32,17 +37,12 @@ public class RecipeServiceImplement implements IRecipeService {
     }
 
     @Override
-    public Optional<Recipe> listId(Long id) {
-        return recipeRepository.findById(id);
-    }
-
-    @Override
     public void delete(Long id) {
         recipeRepository.deleteById(id);
     }
 
     @Override
-    public List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal) {
-        return recipeRepository.findPublishedRecipes(categoriaId, maxCal);
+    public List<Recipe> explorePublished(Integer categoria, BigDecimal maxCal) {
+        return recipeRepository.explorePublished(categoria, maxCal);
     }
 }

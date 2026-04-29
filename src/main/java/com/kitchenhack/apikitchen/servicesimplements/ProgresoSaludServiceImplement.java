@@ -1,6 +1,7 @@
 package com.kitchenhack.apikitchen.servicesimplements;
 
 import com.kitchenhack.apikitchen.entities.ProgresoSalud;
+import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.repositories.ProgresoSaludRepository;
 import com.kitchenhack.apikitchen.servicesinterfaces.IProgresoSaludService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +22,28 @@ public class ProgresoSaludServiceImplement implements IProgresoSaludService {
     }
 
     @Override
+    public Optional<ProgresoSalud> listId(Integer id) {
+        return progresoSaludRepository.findById(id);
+    }
+
+    @Override
     public ProgresoSalud insert(ProgresoSalud progresoSalud) {
         return progresoSaludRepository.save(progresoSalud);
     }
 
     @Override
-    public void update(ProgresoSalud progresoSalud) {
-        progresoSaludRepository.save(progresoSalud);
-    }
-
-    @Override
-    public Optional<ProgresoSalud> listId(Integer id) {
-        return progresoSaludRepository.findById(id);
+    public ProgresoSalud update(ProgresoSalud progresoSalud) {
+        return progresoSaludRepository.save(progresoSalud);
     }
 
     @Override
     public void delete(Integer id) {
         progresoSaludRepository.deleteById(id);
     }
-}
 
+    // US-P3-02: historial por usuario ordenado por fecha DESC
+    @Override
+    public List<ProgresoSalud> listByUsuario(Usuario usuario) {
+        return progresoSaludRepository.findByIdUsuarioOrderByFechaDesc(usuario);
+    }
+}

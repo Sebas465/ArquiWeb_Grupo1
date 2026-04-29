@@ -21,9 +21,11 @@ public class IngredienteController {
 	@Autowired
 	private IIngredienteService ingredienteService;
 
+	// Se instancia una sola vez a nivel de clase para todo el controlador
+	private final ModelMapper m = new ModelMapper();
+
 	@GetMapping
 	public ResponseEntity<List<IngredienteDTO>> listar(@RequestParam(name = "tipo", required = false) Integer tipo) {
-		ModelMapper m = new ModelMapper();
 		// Si se pasa tipo, filtrar por tipo; si no, listar todos.
 		List<Ingrediente> ingredientes = (tipo == null) ? ingredienteService.list() : ingredienteService.findByTipo(tipo);
 		List<IngredienteDTO> listaIngredientes = ingredientes
@@ -34,7 +36,6 @@ public class IngredienteController {
 
 	@GetMapping("/search")
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre", required = true) String nombre) {
-		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombre(nombre);
 		List<IngredienteDTO> listaIngredientes = ingredientes
 				.stream().map(x -> m.map(x, IngredienteDTO.class))
@@ -46,7 +47,6 @@ public class IngredienteController {
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
 			@RequestParam(name = "nombre", required = true) String nombre,
 			@RequestParam(name = "tipo", required = false) Integer tipo) {
-		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
 		List<IngredienteDTO> listaIngredientes = ingredientes
 				.stream().map(x -> m.map(x, IngredienteDTO.class))
@@ -56,7 +56,6 @@ public class IngredienteController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-		ModelMapper m = new ModelMapper();
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
 		if (ingrediente.isPresent()) {
@@ -70,7 +69,6 @@ public class IngredienteController {
 
 	@PostMapping
 	public ResponseEntity<IngredienteDTO> crear(@RequestBody IngredienteDTO dto) {
-		ModelMapper m = new ModelMapper();
 		// El DTO de entrada se convierte a entidad para que el servicio la persista.
 		Ingrediente ingrediente = m.map(dto, Ingrediente.class);
 		Ingrediente saved = ingredienteService.insert(ingrediente);
