@@ -56,8 +56,8 @@ public class ProgresoSaludController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
 
-        // Mapear DTO -> entidad usando el constructor disponible
-        ProgresoSalud p = new ProgresoSalud(null, dto.getUsuarioId(), dto.getAlergias());
+        // Crear entidad con usuario entity (no Integer)
+        ProgresoSalud p = new ProgresoSalud(null, usuarioOpt.get(), dto.getFecha(), dto.getPesoKg(), dto.getTallaCm(), dto.getImc(), dto.getAlergias());
 
         ProgresoSalud saved = progresoSaludService.insert(p);
         ModelMapper m = new ModelMapper();
@@ -74,14 +74,28 @@ public class ProgresoSaludController {
 
         ProgresoSalud p = existente.get();
         // validar usuario si viene
-        if (dto.getUsuarioId() != null) {
+        if (dto.getUsuarioId() != null && !dto.getUsuarioId().equals(p.getIdUsuario().getId())) {
             Optional<Usuario> usuarioOpt = usuarioService.listId(dto.getUsuarioId());
             if (usuarioOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
             }
-            p.setUsuarioId(dto.getUsuarioId());
+            p.setIdUsuario(usuarioOpt.get());
         }
-        p.setAlergias(dto.getAlergias());
+        if (dto.getFecha() != null) {
+            p.setFecha(dto.getFecha());
+        }
+        if (dto.getPesoKg() != null) {
+            p.setPesoKg(dto.getPesoKg());
+        }
+        if (dto.getTallaCm() != null) {
+            p.setTallaCm(dto.getTallaCm());
+        }
+        if (dto.getImc() != null) {
+            p.setImc(dto.getImc());
+        }
+        if (dto.getAlergias() != null) {
+            p.setAlergias(dto.getAlergias());
+        }
         progresoSaludService.update(p);
         return ResponseEntity.ok("Progreso de salud actualizado correctamente");
     }
