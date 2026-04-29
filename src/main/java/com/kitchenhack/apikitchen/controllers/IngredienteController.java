@@ -32,6 +32,28 @@ public class IngredienteController {
 		return ResponseEntity.ok(listaIngredientes);
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre", required = true) String nombre) {
+		ModelMapper m = new ModelMapper();
+		List<Ingrediente> ingredientes = ingredienteService.searchByNombre(nombre);
+		List<IngredienteDTO> listaIngredientes = ingredientes
+				.stream().map(x -> m.map(x, IngredienteDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(listaIngredientes);
+	}
+
+	@GetMapping("/search-advanced")
+	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
+			@RequestParam(name = "nombre", required = true) String nombre,
+			@RequestParam(name = "tipo", required = false) Integer tipo) {
+		ModelMapper m = new ModelMapper();
+		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
+		List<IngredienteDTO> listaIngredientes = ingredientes
+				.stream().map(x -> m.map(x, IngredienteDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(listaIngredientes);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
 		ModelMapper m = new ModelMapper();
