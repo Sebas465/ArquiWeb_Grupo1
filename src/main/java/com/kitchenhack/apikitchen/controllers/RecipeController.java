@@ -57,18 +57,11 @@ public class RecipeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
         }
         Recipe r = existente.get();
-        // actualizar campos permitidos
+        // actualizar campos permitidos según esquema actual de la tabla 'receta'
         r.setTitle(dto.getTitle());
         r.setDescription(dto.getDescription());
-        r.setImageUrl(dto.getImageUrl());
-        r.setCategoryId(dto.getCategoryId());
-        r.setTotalCalories(dto.getTotalCalories());
-        r.setProteinGrams(dto.getProteinGrams());
-        r.setCarbsGrams(dto.getCarbsGrams());
-        r.setFatGrams(dto.getFatGrams());
         r.setPrepTimeMinutes(dto.getPrepTimeMinutes());
         r.setDifficulty(dto.getDifficulty());
-        r.setAverageRating(dto.getAverageRating());
         r.setPublished(dto.getPublished() != null ? dto.getPublished() : r.getPublished());
         recipeService.update(r);
         return ResponseEntity.ok("Receta actualizada correctamente");

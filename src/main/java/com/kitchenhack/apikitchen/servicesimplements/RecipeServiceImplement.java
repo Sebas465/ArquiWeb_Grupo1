@@ -43,6 +43,7 @@ public class RecipeServiceImplement implements IRecipeService {
 
     @Override
     public List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal) {
-        return recipeRepository.findPublishedRecipes(categoriaId, maxCal);
+        // Current DB schema doesn't have category or calorie columns; return published recipes
+        return recipeRepository.findPublishedRecipes();
     }
 }

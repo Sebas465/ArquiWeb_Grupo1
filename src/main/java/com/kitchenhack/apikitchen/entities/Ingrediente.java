@@ -8,7 +8,7 @@ public class Ingrediente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true, length = 150)
     private String nombre;
@@ -36,7 +36,7 @@ public class Ingrediente {
     public Ingrediente() {
     }
 
-    public Ingrediente(Long id, String nombre, String unidadMedida, Etiqueta idEtiqueta, Double calorias100, Double proteinas100, Double carbos100, Double grasas100) {
+    public Ingrediente(Integer id, String nombre, String unidadMedida, Etiqueta idEtiqueta, Double calorias100, Double proteinas100, Double carbos100, Double grasas100) {
         this.id = id;
         this.nombre = nombre;
         this.unidadMedida = unidadMedida;
@@ -47,11 +47,11 @@ public class Ingrediente {
         this.grasas100 = grasas100;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -14,12 +14,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     // Busca todas las recetas donde el campo 'publicada' sea true
     List<Recipe> findByPublishedTrue();
 
-    List<Recipe> findByPublishedTrueOrderByAverageRatingDesc();
+    // DB schema does not include categoryId/totalCalories/averageRating.
+    // For exploration we return published recipes ordered by ultimaActualizacion desc.
+    List<Recipe> findByPublishedTrueOrderByUltimaActualizacionDesc();
 
-    @Query("SELECT r FROM Recipe r WHERE r.published = true " +
-           "AND (:categoryId IS NULL OR r.categoryId = :categoryId) " +
-           "AND (:maxCalories IS NULL OR r.totalCalories <= :maxCalories) " +
-           "ORDER BY r.averageRating DESC")
-    List<Recipe> findPublishedRecipes(@Param("categoryId") Integer categoryId,
-                                      @Param("maxCalories") BigDecimal maxCalories);
+    // Simpler query for published recipes; ignore category/maxCalories filters because
+    // those columns don't exist in the current DB schema.
+    @Query("SELECT r FROM Recipe r WHERE r.published = true ORDER BY r.ultimaActualizacion DESC")
+    List<Recipe> findPublishedRecipes();
 }
