@@ -30,6 +30,9 @@ public class Notificacion {
     @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio;
 
+    public Notificacion() {
+    }
+
     public Notificacion(Integer id, Usuario usuario, String tipo, String titulo, String cuerpo, Boolean leida, LocalDateTime fechaEnvio) {
         this.id = id;
         this.usuario = usuario;
