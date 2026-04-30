@@ -36,7 +36,22 @@ public class UsuarioServiceImplement implements IUsuarioService {
     }
 
     @Override
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmailJPQL(email);
+    }
+
+    // Sobrecarga de compatibilidad para referencias con Integer.
+    public Optional<Usuario> listId(Integer id) {
+        return usuarioRepository.findById(id);
+    }
+
+    @Override
     public void delete(int id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    // Sobrecarga de compatibilidad para referencias con Integer.
+    public void delete(Integer id) {
         usuarioRepository.deleteById(id);
     }
 

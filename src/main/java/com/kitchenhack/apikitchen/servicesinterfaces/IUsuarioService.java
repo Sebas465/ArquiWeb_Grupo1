@@ -19,6 +19,9 @@ public interface IUsuarioService {
     // Busca un usuario por su identificador.
     Optional<Usuario> listId(int id);
 
+    // Busca un usuario por email.
+    Optional<Usuario> findByEmail(String email);
+
     // Elimina un usuario por su identificador.
     void delete(int id);
 
