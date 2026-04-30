@@ -1,18 +1,12 @@
 package com.kitchenhack.apikitchen.dtos;
 
+import com.kitchenhack.apikitchen.entities.Etiqueta;
+
 public class IngredienteDTO {
 
-    private Long id;
     private String nombre;
-    private Integer tipoIngredienteId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String unidadMedida;
+    private Etiqueta idEtiqueta;
 
     public String getNombre() {
         return nombre;
@@ -22,12 +16,20 @@ public class IngredienteDTO {
         this.nombre = nombre;
     }
 
-    public Integer getTipoIngredienteId() {
-        return tipoIngredienteId;
+    public String getUnidadMedida() {
+        return unidadMedida;
     }
 
-    public void setTipoIngredienteId(Integer tipoIngredienteId) {
-        this.tipoIngredienteId = tipoIngredienteId;
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
+
+    public Etiqueta getIdEtiqueta() {
+        return idEtiqueta;
+    }
+
+    public void setIdEtiqueta(Etiqueta idEtiqueta) {
+        this.idEtiqueta = idEtiqueta;
     }
 }
 

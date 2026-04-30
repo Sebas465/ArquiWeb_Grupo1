@@ -23,7 +23,6 @@ public interface IRecipeService {
     // Elimina por id.
     void delete(Long id);
 
-    // Explora recetas publicadas (filtrado simple) y devuelve entidades.
-    List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal);
+
 }
 

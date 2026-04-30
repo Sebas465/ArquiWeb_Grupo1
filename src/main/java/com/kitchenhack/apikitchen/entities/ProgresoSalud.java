@@ -44,6 +44,9 @@ public class ProgresoSalud {
         this.alergias = alergias;
     }
 
+    public ProgresoSalud(Object o, Integer usuarioId, String alergias) {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -98,6 +101,9 @@ public class ProgresoSalud {
 
     public void setAlergias(String alergias) {
         this.alergias = alergias;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
     }
 }
 

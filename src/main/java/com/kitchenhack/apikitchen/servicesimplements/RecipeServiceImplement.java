@@ -41,8 +41,4 @@ public class RecipeServiceImplement implements IRecipeService {
         recipeRepository.deleteById(id);
     }
 
-    @Override
-    public List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal) {
-        return recipeRepository.findPublishedRecipes(categoriaId, maxCal);
-    }
 }

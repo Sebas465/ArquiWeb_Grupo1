@@ -29,5 +29,5 @@ public interface IIngredienteService {
     List<Ingrediente> searchByNombre(String nombre);
 
     // Busca ingredientes por nombre y tipo simultáneamente
-    List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId);
+    List<Ingrediente> searchByNombreAndTipo(String nombre, Long tipoIngredienteId);
 }

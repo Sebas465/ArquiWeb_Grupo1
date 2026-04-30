@@ -22,12 +22,20 @@ public class IngredienteController {
 	private IIngredienteService ingredienteService;
 
 	@GetMapping
-	public ResponseEntity<List<IngredienteDTO>> listar(@RequestParam(name = "tipo", required = false) Integer tipo) {
+	public ResponseEntity<?> listar(@RequestParam(name = "idEtiqueta", required = false) Integer idEtiqueta) {
 		ModelMapper m = new ModelMapper();
-		// Si se pasa tipo, filtrar por tipo; si no, listar todos.
-		List<Ingrediente> ingredientes = (tipo == null) ? ingredienteService.list() : ingredienteService.findByTipo(tipo);
+		List<Ingrediente> ingredientes = (idEtiqueta == null)
+				? ingredienteService.list()
+				: ingredienteService.findByTipo(idEtiqueta);
+
+		if (ingredientes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("No hay ingredientes registrados");
+		}
+
 		List<IngredienteDTO> listaIngredientes = ingredientes
-				.stream().map(x -> m.map(x, IngredienteDTO.class))
+				.stream()
+				.map(x -> m.map(x, IngredienteDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(listaIngredientes);
 	}
@@ -45,7 +53,7 @@ public class IngredienteController {
 	@GetMapping("/search-advanced")
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
 			@RequestParam(name = "nombre", required = true) String nombre,
-			@RequestParam(name = "tipo", required = false) Integer tipo) {
+			@RequestParam(name = "tipo", required = false) Long tipo) {
 		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
 		List<IngredienteDTO> listaIngredientes = ingredientes
@@ -69,14 +77,35 @@ public class IngredienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<IngredienteDTO> crear(@RequestBody IngredienteDTO dto) {
+	public ResponseEntity<?> crear(@RequestBody IngredienteDTO dto) {
+		if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("El nombre es obligatorio");
+		}
+
 		ModelMapper m = new ModelMapper();
-		// El DTO de entrada se convierte a entidad para que el servicio la persista.
-		Ingrediente ingrediente = m.map(dto, Ingrediente.class);
-		Ingrediente saved = ingredienteService.insert(ingrediente);
-		// La entidad guardada se vuelve a mapear a DTO para la respuesta HTTP.
-		IngredienteDTO responseDTO = m.map(saved, IngredienteDTO.class);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+		try {
+			Ingrediente ingrediente = m.map(dto, Ingrediente.class);
+			ingrediente.setId(0);
+
+			Ingrediente saved = ingredienteService.insert(ingrediente);
+
+			IngredienteDTO responseDTO = m.map(saved, IngredienteDTO.class);
+			return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+		} catch (Exception e) {
+			Throwable rootCause = org.springframework.core.NestedExceptionUtils.getMostSpecificCause(e);
+			String message = rootCause.getMessage();
+
+			if (message != null && (message.contains("id_etiqueta") || message.contains("fkey") || message.contains("foreign key"))) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("Etiqueta no encontrada");
+			}
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error interno al procesar el ingrediente: " + (message != null ? message : "Desconocido"));
+		}
 	}
 
 	@PutMapping("/{id}")
@@ -90,7 +119,7 @@ public class IngredienteController {
 		// Reutilizar la entidad encontrada y modificar solo los campos permitidos.
 		Ingrediente ingrediente = existente.get();
 		ingrediente.setNombre(dto.getNombre());
-		ingrediente.setTipoIngredienteId(dto.getTipoIngredienteId());
+		ingrediente.setIdEtiqueta(dto.getIdEtiqueta());
 
 		ingredienteService.update(ingrediente);
 

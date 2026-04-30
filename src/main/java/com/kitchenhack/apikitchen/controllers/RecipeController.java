@@ -2,6 +2,7 @@ package com.kitchenhack.apikitchen.controllers;
 
 import com.kitchenhack.apikitchen.dtos.RecipeDTO;
 import com.kitchenhack.apikitchen.entities.Recipe;
+import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,21 @@ public class RecipeController {
     private IRecipeService recipeService;
 
     @GetMapping
-    public ResponseEntity<List<RecipeDTO>> listar() {
+    public ResponseEntity<?> listar() {
         ModelMapper m = new ModelMapper();
-        List<RecipeDTO> list = recipeService.list()
-                .stream().map(r -> m.map(r, RecipeDTO.class)).collect(Collectors.toList());
+        List<Recipe> recetas = recipeService.list().stream()
+                .filter(r -> r.getPublished() != null && r.getPublished())
+                .collect(Collectors.toList());
+
+        if (recetas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No hay recetas disponibles");
+        }
+
+        List<RecipeDTO> list = recetas.stream()
+                .map(r -> m.map(r, RecipeDTO.class))
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(list);
     }
 
@@ -43,36 +55,69 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody RecipeDTO dto) {
+        if (dto.getDifficulty() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
+        }
+
+        String diff = dto.getDifficulty().toLowerCase().trim();
+        if (!diff.equals("facil") && !diff.equals("medio") && !diff.equals("dificil")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
+        }
+
         ModelMapper m = new ModelMapper();
-        Recipe recipe = m.map(dto, Recipe.class);
-        Recipe saved = recipeService.insert(recipe);
-        RecipeDTO response = m.map(saved, RecipeDTO.class);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            Recipe recipe = m.map(dto, Recipe.class);
+
+            recipe.setId(null);
+            recipe.setUltimaActualizacion(java.time.LocalDateTime.now());
+
+            if (dto.getIdAutor() != null) {
+                Usuario autor = new Usuario();
+                autor.setId(dto.getIdAutor());
+                recipe.setIdAutor(autor);
+            }
+
+            Recipe saved = recipeService.insert(recipe);
+            RecipeDTO responseDTO = m.map(saved, RecipeDTO.class);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+        } catch (Exception e) {
+            Throwable rootCause = org.springframework.core.NestedExceptionUtils.getMostSpecificCause(e);
+            String message = rootCause.getMessage();
+
+            if (message != null && (message.contains("id_autor") || message.contains("fk") || message.contains("foreign key"))) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            }
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al registrar receta: " + (message != null ? message : "Error desconocido"));
+        }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody RecipeDTO dto) {
-        Optional<Recipe> existente = recipeService.listId(id);
-        if (existente.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
-        }
-        Recipe r = existente.get();
-        // actualizar campos permitidos
-        r.setTitle(dto.getTitle());
-        r.setDescription(dto.getDescription());
-        r.setImageUrl(dto.getImageUrl());
-        r.setCategoryId(dto.getCategoryId());
-        r.setTotalCalories(dto.getTotalCalories());
-        r.setProteinGrams(dto.getProteinGrams());
-        r.setCarbsGrams(dto.getCarbsGrams());
-        r.setFatGrams(dto.getFatGrams());
-        r.setPrepTimeMinutes(dto.getPrepTimeMinutes());
-        r.setDifficulty(dto.getDifficulty());
-        r.setAverageRating(dto.getAverageRating());
-        r.setPublished(dto.getPublished() != null ? dto.getPublished() : r.getPublished());
-        recipeService.update(r);
-        return ResponseEntity.ok("Receta actualizada correctamente");
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody RecipeDTO dto) {
+//        Optional<Recipe> existente = recipeService.listId(id);
+//
+//        if (existente.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
+//        }
+//
+//        Recipe r = existente.get();
+//
+//        if (dto.getTitle() != null) r.setTitle(dto.getTitle());
+//        if (dto.getDescription() != null) r.setDescription(dto.getDescription());
+//        if (dto.getDifficulty() != null) r.setDifficulty(dto.getDifficulty());
+//
+//        if (dto.getIdAutor() != 0) {
+//            r.setIdAutor(dto.getIdAutor());
+//        }
+//
+//        recipeService.update(r);
+//
+//        return ResponseEntity.ok("Receta actualizada");
+//    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
@@ -85,13 +130,4 @@ public class RecipeController {
         }
     }
 
-    @GetMapping("/explore")
-    public ResponseEntity<List<RecipeDTO>> exploreRecipes(
-            @RequestParam(name = "categoria", required = false) Integer categoria,
-            @RequestParam(name = "max_cal", required = false) BigDecimal maxCal) {
-        ModelMapper m = new ModelMapper();
-        List<RecipeDTO> dtos = recipeService.explorePublished(categoria, maxCal)
-                .stream().map(r -> m.map(r, RecipeDTO.class)).collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
 }

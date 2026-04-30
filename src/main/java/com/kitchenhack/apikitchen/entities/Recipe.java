@@ -33,11 +33,10 @@ public class Recipe {
     @Column(name = "ultima_act")
     private LocalDateTime ultimaActualizacion;
 
-    // Constructor sin-args requerido por JPA
     public Recipe() {
     }
 
-    public Recipe(Long id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Boolean published, LocalDateTime ultimaActualizacion) {
+    public Recipe(Long id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Long categoryId, Double totalCalories, Double averageRating, Boolean published, LocalDateTime ultimaActualizacion) {
         this.id = id;
         this.title = title;
         this.description = description;

@@ -2,13 +2,15 @@ package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "ingrediente")
 public class Ingrediente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, unique = true, length = 150)
     private String nombre;
@@ -21,22 +23,22 @@ public class Ingrediente {
     private Etiqueta idEtiqueta;
 
     @Column(name = "calorias_100")
-    private Double calorias100;
+    private BigDecimal calorias100;
 
     @Column(name = "proteinas_100")
-    private Double proteinas100;
+    private BigDecimal proteinas100;
 
     @Column(name = "carbos_100")
-    private Double carbos100;
+    private BigDecimal carbos100;
 
     @Column(name = "grasas_100")
-    private Double grasas100;
+    private BigDecimal grasas100;
 
     // Constructor sin-args requerido por JPA/Hibernate
     public Ingrediente() {
     }
 
-    public Ingrediente(Long id, String nombre, String unidadMedida, Etiqueta idEtiqueta, Double calorias100, Double proteinas100, Double carbos100, Double grasas100) {
+    public Ingrediente(int id, String nombre, String unidadMedida, Etiqueta idEtiqueta, BigDecimal calorias100, BigDecimal proteinas100, BigDecimal carbos100, BigDecimal grasas100) {
         this.id = id;
         this.nombre = nombre;
         this.unidadMedida = unidadMedida;
@@ -47,11 +49,11 @@ public class Ingrediente {
         this.grasas100 = grasas100;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -79,35 +81,35 @@ public class Ingrediente {
         this.idEtiqueta = idEtiqueta;
     }
 
-    public Double getCalorias100() {
+    public BigDecimal getCalorias100() {
         return calorias100;
     }
 
-    public void setCalorias100(Double calorias100) {
+    public void setCalorias100(BigDecimal calorias100) {
         this.calorias100 = calorias100;
     }
 
-    public Double getProteinas100() {
+    public BigDecimal getProteinas100() {
         return proteinas100;
     }
 
-    public void setProteinas100(Double proteinas100) {
+    public void setProteinas100(BigDecimal proteinas100) {
         this.proteinas100 = proteinas100;
     }
 
-    public Double getCarbos100() {
+    public BigDecimal getCarbos100() {
         return carbos100;
     }
 
-    public void setCarbos100(Double carbos100) {
+    public void setCarbos100(BigDecimal carbos100) {
         this.carbos100 = carbos100;
     }
 
-    public Double getGrasas100() {
+    public BigDecimal getGrasas100() {
         return grasas100;
     }
 
-    public void setGrasas100(Double grasas100) {
+    public void setGrasas100(BigDecimal grasas100) {
         this.grasas100 = grasas100;
     }
 }
