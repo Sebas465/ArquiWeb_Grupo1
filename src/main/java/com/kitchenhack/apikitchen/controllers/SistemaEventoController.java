@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sistema-eventos")
-@CrossOrigin(origins = "*")
 public class SistemaEventoController {
 
     @Autowired
@@ -29,8 +28,9 @@ public class SistemaEventoController {
     // GET http://localhost:8080/sistema-eventos
     @GetMapping
     public ResponseEntity<List<SistemaEventoDTO>> listar() {
+        ModelMapper m = new ModelMapper();
         List<SistemaEvento> list = sistemaEventoService.list();
-        List<SistemaEventoDTO> dtos = list.stream().map(this::toDTO).collect(Collectors.toList());
+        List<SistemaEventoDTO> dtos = list.stream().map(x -> m.map(x, SistemaEventoDTO.class)).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
@@ -47,22 +47,22 @@ public class SistemaEventoController {
     }
 
     // POST http://localhost:8080/sistema-eventos
-    @PostMapping
-    public ResponseEntity<?> crear(@RequestBody SistemaEventoDTO dto) {
+    @PostMapping("/nuevo")
+    public ResponseEntity<SistemaEventoDTO> registrar(@RequestBody SistemaEventoDTO dto) {
         ModelMapper m = new ModelMapper();
         // Validar que venga idUsuario y que exista
         if (dto.getIdUsuario() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("idUsuario es requerido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Optional<Usuario> usuarioOpt = usuarioService.listId(dto.getIdUsuario());
         if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         SistemaEvento evento = m.map(dto, SistemaEvento.class);
         // Asignar la entidad Usuario existente
         evento.setUsuario(usuarioOpt.get());
         SistemaEvento saved = sistemaEventoService.insert(evento);
-        SistemaEventoDTO response = toDTO(saved);
+        SistemaEventoDTO response = m.map(saved, SistemaEventoDTO.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
