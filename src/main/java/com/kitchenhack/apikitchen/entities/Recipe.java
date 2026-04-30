@@ -9,7 +9,7 @@ public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "titulo", nullable = false)
     private String title;
@@ -37,7 +37,7 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(Long id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Boolean published, LocalDateTime ultimaActualizacion) {
+    public Recipe(Integer id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Boolean published, LocalDateTime ultimaActualizacion) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -48,11 +48,11 @@ public class Recipe {
         this.ultimaActualizacion = ultimaActualizacion;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,6 +1,7 @@
 package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "receta_detalle")
@@ -19,7 +20,7 @@ public class RecetaDetalle {
     private Ingrediente idIngrediente;
 
     @Column(name = "cantidad")
-    private Double cantidad;
+    private BigDecimal cantidad;
 
     @Column(name = "es_paso")
     private Boolean esPaso = false;
@@ -33,7 +34,7 @@ public class RecetaDetalle {
     public RecetaDetalle() {
     }
 
-    public RecetaDetalle(Integer id, Recipe idReceta, Ingrediente idIngrediente, Double cantidad, Boolean esPaso, Integer orden, String contenido) {
+    public RecetaDetalle(Integer id, Recipe idReceta, Ingrediente idIngrediente, BigDecimal cantidad, Boolean esPaso, Integer orden, String contenido) {
         this.id = id;
         this.idReceta = idReceta;
         this.idIngrediente = idIngrediente;
@@ -68,10 +69,10 @@ public class RecetaDetalle {
     }
 
     public Double getCantidad() {
-        return cantidad;
+        return cantidad != null ? cantidad.doubleValue() : null;
     }
 
-    public void setCantidad(Double cantidad) {
+    public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
     }
 

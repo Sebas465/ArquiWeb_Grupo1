@@ -1,6 +1,7 @@
 package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "ejercicio")
@@ -20,12 +21,12 @@ public class Ejercicio {
     private Integer duracionMin;
 
     @Column(name = "met_valor")
-    private Double metValor;
+    private BigDecimal metValor;
 
     public Ejercicio() {
     }
 
-    public Ejercicio(Integer id, String nombre, String grupoMuscular, Integer duracionMin, Double metValor) {
+    public Ejercicio(Integer id, String nombre, String grupoMuscular, Integer duracionMin, BigDecimal metValor) {
         this.id = id;
         this.nombre = nombre;
         this.grupoMuscular = grupoMuscular;
@@ -66,10 +67,10 @@ public class Ejercicio {
     }
 
     public Double getMetValor() {
-        return metValor;
+        return metValor != null ? metValor.doubleValue() : null;
     }
 
-    public void setMetValor(Double metValor) {
+    public void setMetValor(BigDecimal metValor) {
         this.metValor = metValor;
     }
 }
