@@ -6,6 +6,7 @@ import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.servicesinterfaces.IProgresoSaludService;
 import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/progreso-salud")
-@CrossOrigin(origins = "*")
 public class ProgresoSaludController {
 
     @Autowired
@@ -28,8 +28,9 @@ public class ProgresoSaludController {
 
     @GetMapping
     public ResponseEntity<List<ProgresoSaludDTO>> listar() {
+        ModelMapper m = new ModelMapper();
         List<ProgresoSaludDTO> lista = progresoSaludService.list()
-                .stream().map(this::toDTO).collect(Collectors.toList());
+                .stream().map(x -> m.map(x, ProgresoSaludDTO.class)).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
 
@@ -37,21 +38,22 @@ public class ProgresoSaludController {
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         Optional<ProgresoSalud> opt = progresoSaludService.listId(id);
         if (opt.isPresent()) {
-            return ResponseEntity.ok(toDTO(opt.get()));
+            ModelMapper m = new ModelMapper();
+            return ResponseEntity.ok(m.map(opt.get(), ProgresoSaludDTO.class));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Progreso de salud no encontrado");
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> crear(@RequestBody ProgresoSaludDTO dto) {
+    @PostMapping("/nuevo")
+    public ResponseEntity<ProgresoSaludDTO> registrar(@RequestBody ProgresoSaludDTO dto) {
         // Validar usuario existe
         if (dto.getUsuarioId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("usuarioId es requerido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Optional<Usuario> usuarioOpt = usuarioService.listId(dto.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         // Crear entidad con usuario entity (no Integer)
@@ -65,7 +67,8 @@ public class ProgresoSaludController {
                 dto.getAlergias());
 
         ProgresoSalud saved = progresoSaludService.insert(p);
-        ProgresoSaludDTO response = toDTO(saved);
+        ModelMapper m = new ModelMapper();
+        ProgresoSaludDTO response = m.map(saved, ProgresoSaludDTO.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

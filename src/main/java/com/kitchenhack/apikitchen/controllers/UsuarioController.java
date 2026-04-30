@@ -12,50 +12,60 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.modelmapper.ModelMapper;
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> listar() {
+    public ResponseEntity<?> listar() {
+        ModelMapper m = new ModelMapper();
         // Cada entidad se convierte a DTO para no devolver directamente la entidad JPA.
         List<UsuarioDTO> listaUsuarios = usuarioService.list()
-                .stream().map(this::toDTO)
+                .stream().map(x -> m.map(x, UsuarioDTO.class))
                 .collect(Collectors.toList());
+        if (listaUsuarios.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay usuarios registrados");
+        }
         return ResponseEntity.ok(listaUsuarios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        ModelMapper m = new ModelMapper();
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
         if (usuario.isPresent()) {
-            UsuarioDTO dto = toDTO(usuario.get());
+            // Optional presente: convertir la entidad a DTO con ModelMapper
+            UsuarioDTO dto = m.map(usuario.get(), UsuarioDTO.class);
+            // Asegurar que el campo contrasenaHash no se exponga
+            dto.setContrasenaHash(null);
             return ResponseEntity.ok(dto);
         } else {
+            // Si el Optional viene vacío, informar que no existe el recurso
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Usuario no encontrado");
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> crear(@RequestBody UsuarioDTO dto) {
+    @PostMapping("/nuevo")
+    public ResponseEntity<?> registrar(@RequestBody UsuarioDTO dto) {
         if (dto.getContrasenaHash() == null || dto.getContrasenaHash().isBlank()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("contrasenaHash es requerido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("contraseña es requerido");
+        }
+        // Validar unicidad de email y username
+        if ((dto.getEmail() != null && usuarioService.existsByEmail(dto.getEmail())) ||
+                (dto.getUsername() != null && usuarioService.existsByUsername(dto.getUsername()))) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email o username ya registrado");
         }
 
-        Usuario u = new Usuario();
-        u.setUsername(dto.getUsername());
-        u.setNombre(dto.getNombre());
-        u.setApellido(dto.getApellido());
-        u.setEmail(dto.getEmail());
-        u.setContrasenaHash(dto.getContrasenaHash());
-
+        ModelMapper m = new ModelMapper();
+        Usuario u = m.map(dto, Usuario.class);
+        // Asegurar rol y fechas como en la implementación previa
         Rol rol = new Rol();
         rol.setId(dto.getIdRol() != null ? dto.getIdRol() : 1);
         u.setIdRol(rol);
@@ -64,7 +74,9 @@ public class UsuarioController {
         u.setUltimaActividad(now);
 
         Usuario saved = usuarioService.insert(u);
-        UsuarioDTO responseDTO = toDTO(saved);
+        UsuarioDTO responseDTO = m.map(saved, UsuarioDTO.class);
+        // No exponer contrasenaHash en la respuesta
+        responseDTO.setContrasenaHash(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
@@ -110,16 +122,5 @@ public class UsuarioController {
         }
     }
 
-    private UsuarioDTO toDTO(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
-        dto.setUsername(usuario.getUsername());
-        dto.setNombre(usuario.getNombre());
-        dto.setApellido(usuario.getApellido());
-        dto.setEmail(usuario.getEmail());
-        dto.setContrasenaHash(usuario.getContrasenaHash());
-        dto.setIdRol(usuario.getIdRol() != null ? usuario.getIdRol().getId() : null);
-        return dto;
-    }
 }
 

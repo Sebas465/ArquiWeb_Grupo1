@@ -5,6 +5,7 @@ import com.kitchenhack.apikitchen.entities.Etiqueta;
 import com.kitchenhack.apikitchen.entities.Ingrediente;
 import com.kitchenhack.apikitchen.servicesinterfaces.IIngredienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ingredientes")
-@CrossOrigin(origins = "*")
 public class IngredienteController {
 
 	@Autowired
@@ -26,8 +26,9 @@ public class IngredienteController {
 	public ResponseEntity<List<IngredienteDTO>> listar(@RequestParam(name = "tipo", required = false) Integer tipo) {
 		// Si se pasa tipo, filtrar por tipo; si no, listar todos.
 		List<Ingrediente> ingredientes = (tipo == null) ? ingredienteService.list() : ingredienteService.findByTipo(tipo);
+		ModelMapper m = new ModelMapper();
 		List<IngredienteDTO> listaIngredientes = ingredientes
-				.stream().map(this::toDTO)
+				.stream().map(x -> m.map(x, IngredienteDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(listaIngredientes);
 	}
@@ -57,7 +58,8 @@ public class IngredienteController {
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
 		if (ingrediente.isPresent()) {
-			IngredienteDTO dto = toDTO(ingrediente.get());
+			ModelMapper m = new ModelMapper();
+			IngredienteDTO dto = m.map(ingrediente.get(), IngredienteDTO.class);
 			return ResponseEntity.ok(dto);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -65,15 +67,14 @@ public class IngredienteController {
 		}
 	}
 
-	@PostMapping
-	public ResponseEntity<?> crear(@RequestBody IngredienteDTO dto) {
+	@PostMapping("/nuevo")
+	public ResponseEntity<IngredienteDTO> registrar(@RequestBody IngredienteDTO dto) {
 		if (dto.getUnidadMedida() == null || dto.getUnidadMedida().isBlank()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("unidadMedida es requerido");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 
-		Ingrediente ingrediente = new Ingrediente();
-		ingrediente.setNombre(dto.getNombre());
-		ingrediente.setUnidadMedida(dto.getUnidadMedida());
+		ModelMapper m = new ModelMapper();
+		Ingrediente ingrediente = m.map(dto, Ingrediente.class);
 		if (dto.getIdEtiqueta() != null) {
 			Etiqueta etiqueta = new Etiqueta();
 			etiqueta.setId(dto.getIdEtiqueta());
@@ -85,7 +86,7 @@ public class IngredienteController {
 		ingrediente.setGrasas100(toBigDecimal(dto.getGrasas100()));
 
 		Ingrediente saved = ingredienteService.insert(ingrediente);
-		IngredienteDTO responseDTO = toDTO(saved);
+		IngredienteDTO responseDTO = m.map(saved, IngredienteDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 	}
 

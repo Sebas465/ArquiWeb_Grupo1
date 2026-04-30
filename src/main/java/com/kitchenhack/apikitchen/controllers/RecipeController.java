@@ -5,6 +5,7 @@ import com.kitchenhack.apikitchen.entities.Recipe;
 import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/recipes")
-@CrossOrigin(origins = "*")
 public class RecipeController {
 
     @Autowired
@@ -28,42 +28,46 @@ public class RecipeController {
 
     @GetMapping
     public ResponseEntity<List<RecipeDTO>> listar() {
-        List<RecipeDTO> list = recipeService.list()
-                .stream().map(this::toDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(list);
+        ModelMapper m = new ModelMapper();
+        // Cada entidad se convierte a DTO para no devolver directamente la entidad JPA.
+        List<RecipeDTO> lista = recipeService.list()
+                .stream().map(x -> m.map(x, RecipeDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         Optional<Recipe> opt = recipeService.listId(id);
         if (opt.isPresent()) {
-            return ResponseEntity.ok(toDTO(opt.get()));
+            ModelMapper m = new ModelMapper();
+            return ResponseEntity.ok(m.map(opt.get(), RecipeDTO.class));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> crear(@RequestBody RecipeDTO dto) {
+    @PostMapping("/nuevo")
+    public ResponseEntity<RecipeDTO> registrar(@RequestBody RecipeDTO dto) {
         if (dto.getIdAutor() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("idAutor es requerido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Optional<Usuario> autorOpt = usuarioService.listId(dto.getIdAutor());
         if (autorOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Autor no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        Recipe recipe = new Recipe();
-        recipe.setTitle(dto.getTitle());
-        recipe.setDescription(dto.getDescription());
+        ModelMapper m = new ModelMapper();
+        // El DTO de entrada se convierte a entidad para que el servicio la persista.
+        Recipe recipe = m.map(dto, Recipe.class);
+        // asegurar que el autor sea la entidad completa
         recipe.setIdAutor(autorOpt.get());
-        recipe.setPrepTimeMinutes(dto.getPrepTimeMinutes());
-        recipe.setDifficulty(dto.getDifficulty());
         recipe.setPublished(dto.getPublished() != null ? dto.getPublished() : Boolean.TRUE);
 
         Recipe saved = recipeService.insert(recipe);
-        RecipeDTO response = toDTO(saved);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        // La entidad guardada se vuelve a mapear a DTO para la respuesta HTTP.
+        RecipeDTO responseDTO = m.map(saved, RecipeDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping("/{id}")
@@ -105,20 +109,10 @@ public class RecipeController {
     public ResponseEntity<List<RecipeDTO>> exploreRecipes(
             @RequestParam(name = "categoria", required = false) Integer categoria,
             @RequestParam(name = "max_cal", required = false) BigDecimal maxCal) {
+        ModelMapper m = new ModelMapper();
         List<RecipeDTO> dtos = recipeService.explorePublished(categoria, maxCal)
-                .stream().map(this::toDTO).collect(Collectors.toList());
+                .stream().map(x -> m.map(x, RecipeDTO.class)).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
-
-    private RecipeDTO toDTO(Recipe r) {
-        RecipeDTO dto = new RecipeDTO();
-        dto.setId(r.getId());
-        dto.setTitle(r.getTitle());
-        dto.setDescription(r.getDescription());
-        dto.setIdAutor(r.getIdAutor() != null ? r.getIdAutor().getId() : null);
-        dto.setPrepTimeMinutes(r.getPrepTimeMinutes());
-        dto.setDifficulty(r.getDifficulty());
-        dto.setPublished(r.getPublished());
-        return dto;
-    }
+    // ...existing code...
 }
