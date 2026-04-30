@@ -23,23 +23,37 @@ public class RecipeController {
     @Autowired
     private IRecipeService recipeService;
 
+    // 1. Endpoint para ListarTodo
     @GetMapping
     public ResponseEntity<?> listar() {
-        ModelMapper m = new ModelMapper();
-        List<Recipe> recetas = recipeService.list().stream()
-                .filter(r -> r.getPublished() != null && r.getPublished())
-                .collect(Collectors.toList());
+        List<Recipe> recetas = recipeService.findByPublishedTrue();
 
         if (recetas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No hay recetas disponibles");
         }
 
-        List<RecipeDTO> list = recetas.stream()
+        return ResponseEntity.ok(convertirAListaDto(recetas));
+    }
+
+    // 2. Endpoint específico para Filtrar
+    // Ruta en Postman: GET /api/recipes/buscar?dificultad=facil
+    @GetMapping("/buscar")
+    public ResponseEntity<?> filtrarPorDificultad(@RequestParam(name = "dificultad") String dificultad) {
+        List<Recipe> recetas = recipeService.findByDifficulty(dificultad);
+
+        if (recetas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No hay recetas con esa dificultad");
+        }
+
+        return ResponseEntity.ok(convertirAListaDto(recetas));
+    }
+    private List<RecipeDTO> convertirAListaDto(List<Recipe> lista) {
+        ModelMapper m = new ModelMapper();
+        return lista.stream()
                 .map(r -> m.map(r, RecipeDTO.class))
                 .collect(Collectors.toList());
-
-        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -95,28 +109,44 @@ public class RecipeController {
         }
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody RecipeDTO dto) {
-//        Optional<Recipe> existente = recipeService.listId(id);
-//
-//        if (existente.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
-//        }
-//
-//        Recipe r = existente.get();
-//
-//        if (dto.getTitle() != null) r.setTitle(dto.getTitle());
-//        if (dto.getDescription() != null) r.setDescription(dto.getDescription());
-//        if (dto.getDifficulty() != null) r.setDifficulty(dto.getDifficulty());
-//
-//        if (dto.getIdAutor() != 0) {
-//            r.setIdAutor(dto.getIdAutor());
-//        }
-//
-//        recipeService.update(r);
-//
-//        return ResponseEntity.ok("Receta actualizada");
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody RecipeDTO dto) {
+        Optional<Recipe> existente = recipeService.listId(id);
+
+        if (existente.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
+        }
+
+        Recipe r = existente.get();
+
+        if (dto.getTitle() != null) r.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) r.setDescription(dto.getDescription());
+
+        if (dto.getDifficulty() != null) {
+            String diff = dto.getDifficulty().toLowerCase().trim();
+            if (diff.equals("facil") || diff.equals("medio") || diff.equals("dificil")) {
+                r.setDifficulty(diff);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
+            }
+        }
+
+        if (dto.getIdAutor() != null) {
+            Usuario nuevoAutor = new Usuario();
+            nuevoAutor.setId(dto.getIdAutor());
+            r.setIdAutor(nuevoAutor);
+        }
+
+        r.setUltimaActualizacion(java.time.LocalDateTime.now());
+
+        try {
+            recipeService.update(r);
+            return ResponseEntity.ok("Receta actualizada con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar: " + e.getMessage());
+        }
+    }
 
 
     @DeleteMapping("/{id}")
@@ -129,5 +159,4 @@ public class RecipeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
         }
     }
-
 }

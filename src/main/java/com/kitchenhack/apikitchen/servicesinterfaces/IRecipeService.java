@@ -23,6 +23,11 @@ public interface IRecipeService {
     // Elimina por id.
     void delete(Long id);
 
+    // US-P2-08: Filtrar por dificultad
+    List<Recipe> findByDifficulty(String difficulty);
+
+    // US-P2-04: (Opcional pero recomendado) Listar solo publicadas
+    List<Recipe> findByPublishedTrue();
 
 }
 

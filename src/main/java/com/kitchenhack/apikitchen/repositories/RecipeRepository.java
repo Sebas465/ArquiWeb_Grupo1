@@ -11,4 +11,6 @@ import java.util.List;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+    List<Recipe> findByDifficulty(String difficulty);
+    List<Recipe> findByPublishedTrue();
 }
