@@ -18,10 +18,10 @@ public interface IRecipeService {
     void update(Recipe recipe);
 
     // Busca por id.
-    Optional<Recipe> listId(Long id);
+    Optional<Recipe> listId(Integer id);
 
     // Elimina por id.
-    void delete(Long id);
+    void delete(Integer id);
 
     // Explora recetas publicadas (filtrado simple) y devuelve entidades.
     List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal);

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
-	List<Ingrediente> findByIdEtiqueta(Integer idEtiqueta);
+public interface IngredienteRepository extends JpaRepository<Ingrediente, Integer> {
+	List<Ingrediente> findByIdEtiqueta_Id(Integer idEtiqueta);
 
 	@Query("SELECT i FROM Ingrediente i WHERE LOWER(i.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
 	List<Ingrediente> searchByNombre(@Param("nombre") String nombre);

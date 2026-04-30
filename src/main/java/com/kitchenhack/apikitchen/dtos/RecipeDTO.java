@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 
 public class RecipeDTO {
 
-    private Long id;
+    private Integer id;
     private String title;
     private String description;
+    private Integer idAutor;
     private String imageUrl;
     private Integer categoryId;
     private BigDecimal totalCalories;
@@ -18,11 +19,11 @@ public class RecipeDTO {
     private BigDecimal averageRating;
     private Boolean published;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -40,6 +41,14 @@ public class RecipeDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getIdAutor() {
+        return idAutor;
+    }
+
+    public void setIdAutor(Integer idAutor) {
+        this.idAutor = idAutor;
     }
 
     public String getImageUrl() {

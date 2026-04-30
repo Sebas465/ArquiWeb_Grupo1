@@ -5,12 +5,12 @@ import com.kitchenhack.apikitchen.entities.ProgresoSalud;
 import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.servicesinterfaces.IProgresoSaludService;
 import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,9 +28,8 @@ public class ProgresoSaludController {
 
     @GetMapping
     public ResponseEntity<List<ProgresoSaludDTO>> listar() {
-        ModelMapper m = new ModelMapper();
         List<ProgresoSaludDTO> lista = progresoSaludService.list()
-                .stream().map(p -> m.map(p, ProgresoSaludDTO.class)).collect(Collectors.toList());
+                .stream().map(this::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
 
@@ -38,8 +37,7 @@ public class ProgresoSaludController {
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         Optional<ProgresoSalud> opt = progresoSaludService.listId(id);
         if (opt.isPresent()) {
-            ModelMapper m = new ModelMapper();
-            return ResponseEntity.ok(m.map(opt.get(), ProgresoSaludDTO.class));
+            return ResponseEntity.ok(toDTO(opt.get()));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Progreso de salud no encontrado");
         }
@@ -57,11 +55,17 @@ public class ProgresoSaludController {
         }
 
         // Crear entidad con usuario entity (no Integer)
-        ProgresoSalud p = new ProgresoSalud(null, usuarioOpt.get(), dto.getFecha(), dto.getPesoKg(), dto.getTallaCm(), dto.getImc(), dto.getAlergias());
+        ProgresoSalud p = new ProgresoSalud(
+                null,
+                usuarioOpt.get(),
+                dto.getFecha(),
+                toBigDecimal(dto.getPesoKg()),
+                dto.getTallaCm(),
+                toBigDecimal(dto.getImc()),
+                dto.getAlergias());
 
         ProgresoSalud saved = progresoSaludService.insert(p);
-        ModelMapper m = new ModelMapper();
-        ProgresoSaludDTO response = m.map(saved, ProgresoSaludDTO.class);
+        ProgresoSaludDTO response = toDTO(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -85,13 +89,13 @@ public class ProgresoSaludController {
             p.setFecha(dto.getFecha());
         }
         if (dto.getPesoKg() != null) {
-            p.setPesoKg(dto.getPesoKg());
+            p.setPesoKg(toBigDecimal(dto.getPesoKg()));
         }
         if (dto.getTallaCm() != null) {
             p.setTallaCm(dto.getTallaCm());
         }
         if (dto.getImc() != null) {
-            p.setImc(dto.getImc());
+            p.setImc(toBigDecimal(dto.getImc()));
         }
         if (dto.getAlergias() != null) {
             p.setAlergias(dto.getAlergias());
@@ -109,6 +113,22 @@ public class ProgresoSaludController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Progreso de salud no encontrado");
         }
+    }
+
+    private BigDecimal toBigDecimal(Double value) {
+        return value == null ? null : BigDecimal.valueOf(value);
+    }
+
+    private ProgresoSaludDTO toDTO(ProgresoSalud p) {
+        ProgresoSaludDTO dto = new ProgresoSaludDTO();
+        dto.setId(p.getId());
+        dto.setUsuarioId(p.getIdUsuario() != null ? p.getIdUsuario().getId() : null);
+        dto.setFecha(p.getFecha());
+        dto.setPesoKg(p.getPesoKg());
+        dto.setTallaCm(p.getTallaCm());
+        dto.setImc(p.getImc());
+        dto.setAlergias(p.getAlergias());
+        return dto;
     }
 }
 

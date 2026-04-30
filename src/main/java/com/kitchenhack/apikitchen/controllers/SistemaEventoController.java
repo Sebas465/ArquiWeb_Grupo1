@@ -29,19 +29,17 @@ public class SistemaEventoController {
     // GET http://localhost:8080/sistema-eventos
     @GetMapping
     public ResponseEntity<List<SistemaEventoDTO>> listar() {
-        ModelMapper m = new ModelMapper();
         List<SistemaEvento> list = sistemaEventoService.list();
-        List<SistemaEventoDTO> dtos = list.stream().map(e -> m.map(e, SistemaEventoDTO.class)).collect(Collectors.toList());
+        List<SistemaEventoDTO> dtos = list.stream().map(this::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
     // GET http://localhost:8080/sistema-eventos/1
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        ModelMapper m = new ModelMapper();
         Optional<SistemaEvento> evento = sistemaEventoService.listId(id);
         if (evento.isPresent()) {
-            SistemaEventoDTO dto = m.map(evento.get(), SistemaEventoDTO.class);
+            SistemaEventoDTO dto = toDTO(evento.get());
             return ResponseEntity.ok(dto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evento del sistema no encontrado");
@@ -50,21 +48,21 @@ public class SistemaEventoController {
 
     // POST http://localhost:8080/sistema-eventos
     @PostMapping
-    public ResponseEntity<SistemaEventoDTO> crear(@RequestBody SistemaEventoDTO dto) {
+    public ResponseEntity<?> crear(@RequestBody SistemaEventoDTO dto) {
         ModelMapper m = new ModelMapper();
         // Validar que venga idUsuario y que exista
         if (dto.getIdUsuario() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("idUsuario es requerido");
         }
         Optional<Usuario> usuarioOpt = usuarioService.listId(dto.getIdUsuario());
         if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
         SistemaEvento evento = m.map(dto, SistemaEvento.class);
         // Asignar la entidad Usuario existente
         evento.setUsuario(usuarioOpt.get());
         SistemaEvento saved = sistemaEventoService.insert(evento);
-        SistemaEventoDTO response = m.map(saved, SistemaEventoDTO.class);
+        SistemaEventoDTO response = toDTO(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -105,6 +103,18 @@ public class SistemaEventoController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evento del sistema no encontrado");
         }
+    }
+
+    private SistemaEventoDTO toDTO(SistemaEvento evento) {
+        SistemaEventoDTO dto = new SistemaEventoDTO();
+        dto.setId(evento.getId());
+        dto.setIdUsuario(evento.getUsuario() != null ? evento.getUsuario().getId() : null);
+        dto.setTipo(evento.getTipo());
+        dto.setTitulo(evento.getTitulo());
+        dto.setContenido(evento.getContenido());
+        dto.setLeidoGuardado(evento.getLeidoGuardado());
+        dto.setFecha(evento.getFecha());
+        return dto;
     }
 }
 

@@ -7,6 +7,8 @@ public class UsuarioDTO {
     private String nombre;
     private String apellido;
     private String email;
+    private String contrasenaHash;
+    private Integer idRol;
 
     public Integer getId() {
         return id;
@@ -46,6 +48,22 @@ public class UsuarioDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getContrasenaHash() {
+        return contrasenaHash;
+    }
+
+    public void setContrasenaHash(String contrasenaHash) {
+        this.contrasenaHash = contrasenaHash;
+    }
+
+    public Integer getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
     }
 }
 

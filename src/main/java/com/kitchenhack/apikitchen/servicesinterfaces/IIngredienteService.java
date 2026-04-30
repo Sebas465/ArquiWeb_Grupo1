@@ -17,10 +17,10 @@ public interface IIngredienteService {
     void update(Ingrediente ingrediente);
 
     // Busca un ingrediente por su identificador.
-    Optional<Ingrediente> listId(Long id);
+    Optional<Ingrediente> listId(Integer id);
 
     // Elimina un ingrediente por su identificador.
-    void delete(Long id);
+    void delete(Integer id);
 
     // Lista ingredientes por tipo/etiqueta (filtro opcional en GET /ingredientes?tipo=1)
     List<Ingrediente> findByTipo(Integer idEtiqueta);

@@ -1,15 +1,16 @@
 package com.kitchenhack.apikitchen.controllers;
 
 import com.kitchenhack.apikitchen.dtos.UsuarioDTO;
+import com.kitchenhack.apikitchen.entities.Rol;
 import com.kitchenhack.apikitchen.entities.Usuario;
 import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
-import org.modelmapper.ModelMapper;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,21 +23,19 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listar() {
-        ModelMapper m = new ModelMapper();
         // Cada entidad se convierte a DTO para no devolver directamente la entidad JPA.
         List<UsuarioDTO> listaUsuarios = usuarioService.list()
-                .stream().map(x -> m.map(x, UsuarioDTO.class))
+                .stream().map(this::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(listaUsuarios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        ModelMapper m = new ModelMapper();
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
         if (usuario.isPresent()) {
-            UsuarioDTO dto = m.map(usuario.get(), UsuarioDTO.class);
+            UsuarioDTO dto = toDTO(usuario.get());
             return ResponseEntity.ok(dto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -45,13 +44,27 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crear(@RequestBody UsuarioDTO dto) {
-        ModelMapper m = new ModelMapper();
-        // El DTO de entrada se convierte a entidad para que el servicio la persista.
-        Usuario u = m.map(dto, Usuario.class);
+    public ResponseEntity<?> crear(@RequestBody UsuarioDTO dto) {
+        if (dto.getContrasenaHash() == null || dto.getContrasenaHash().isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("contrasenaHash es requerido");
+        }
+
+        Usuario u = new Usuario();
+        u.setUsername(dto.getUsername());
+        u.setNombre(dto.getNombre());
+        u.setApellido(dto.getApellido());
+        u.setEmail(dto.getEmail());
+        u.setContrasenaHash(dto.getContrasenaHash());
+
+        Rol rol = new Rol();
+        rol.setId(dto.getIdRol() != null ? dto.getIdRol() : 1);
+        u.setIdRol(rol);
+        LocalDateTime now = LocalDateTime.now();
+        u.setFechaRegistro(now);
+        u.setUltimaActividad(now);
+
         Usuario saved = usuarioService.insert(u);
-        // La entidad guardada se vuelve a mapear a DTO para la respuesta HTTP.
-        UsuarioDTO responseDTO = m.map(saved, UsuarioDTO.class);
+        UsuarioDTO responseDTO = toDTO(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
@@ -69,6 +82,15 @@ public class UsuarioController {
         u.setNombre(dto.getNombre());
         u.setApellido(dto.getApellido());
         u.setEmail(dto.getEmail());
+        if (dto.getContrasenaHash() != null && !dto.getContrasenaHash().isBlank()) {
+            u.setContrasenaHash(dto.getContrasenaHash());
+        }
+        if (dto.getIdRol() != null) {
+            Rol rol = new Rol();
+            rol.setId(dto.getIdRol());
+            u.setIdRol(rol);
+        }
+        u.setUltimaActividad(LocalDateTime.now());
 
         usuarioService.update(u);
 
@@ -86,6 +108,18 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Usuario no encontrado");
         }
+    }
+
+    private UsuarioDTO toDTO(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
+        dto.setUsername(usuario.getUsername());
+        dto.setNombre(usuario.getNombre());
+        dto.setApellido(usuario.getApellido());
+        dto.setEmail(usuario.getEmail());
+        dto.setContrasenaHash(usuario.getContrasenaHash());
+        dto.setIdRol(usuario.getIdRol() != null ? usuario.getIdRol().getId() : null);
+        return dto;
     }
 }
 

@@ -32,12 +32,12 @@ public class RecipeServiceImplement implements IRecipeService {
     }
 
     @Override
-    public Optional<Recipe> listId(Long id) {
+    public Optional<Recipe> listId(Integer id) {
         return recipeRepository.findById(id);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         recipeRepository.deleteById(id);
     }
 

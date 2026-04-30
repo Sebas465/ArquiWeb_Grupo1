@@ -31,18 +31,18 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public Optional<Ingrediente> listId(Long id) {
+    public Optional<Ingrediente> listId(Integer id) {
         return ingredienteRepository.findById(id);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         ingredienteRepository.deleteById(id);
     }
 
     @Override
     public List<Ingrediente> findByTipo(Integer idEtiqueta) {
-        return ingredienteRepository.findByIdEtiqueta(idEtiqueta);
+        return ingredienteRepository.findByIdEtiqueta_Id(idEtiqueta);
     }
 
     @Override
