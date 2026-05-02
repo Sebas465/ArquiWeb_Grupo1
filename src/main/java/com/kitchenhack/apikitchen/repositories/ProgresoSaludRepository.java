@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProgresoSaludRepository extends JpaRepository<ProgresoSalud, Integer> {
-    Optional<ProgresoSalud> findByUsuarioId(Integer usuarioId);
+    Optional<ProgresoSalud> findByIdUsuario_Id(Integer usuarioId);
 }
 

@@ -2,6 +2,7 @@ package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "progreso_salud")
@@ -19,13 +20,13 @@ public class ProgresoSalud {
     private LocalDate fecha;
 
     @Column(name = "peso_kg")
-    private Double pesoKg;
+    private BigDecimal pesoKg;
 
     @Column(name = "talla_cm")
     private Integer tallaCm;
 
     @Column(name = "imc")
-    private Double imc;
+    private BigDecimal imc;
 
     @Column(columnDefinition = "TEXT")
     private String alergias;
@@ -34,7 +35,7 @@ public class ProgresoSalud {
     public ProgresoSalud() {
     }
 
-    public ProgresoSalud(Integer id, Usuario idUsuario, LocalDate fecha, Double pesoKg, Integer tallaCm, Double imc, String alergias) {
+    public ProgresoSalud(Integer id, Usuario idUsuario, LocalDate fecha, BigDecimal pesoKg, Integer tallaCm, BigDecimal imc, String alergias) {
         this.id = id;
         this.idUsuario = idUsuario;
         this.fecha = fecha;
@@ -72,10 +73,10 @@ public class ProgresoSalud {
     }
 
     public Double getPesoKg() {
-        return pesoKg;
+        return pesoKg != null ? pesoKg.doubleValue() : null;
     }
 
-    public void setPesoKg(Double pesoKg) {
+    public void setPesoKg(BigDecimal pesoKg) {
         this.pesoKg = pesoKg;
     }
 
@@ -88,10 +89,10 @@ public class ProgresoSalud {
     }
 
     public Double getImc() {
-        return imc;
+        return imc != null ? imc.doubleValue() : null;
     }
 
-    public void setImc(Double imc) {
+    public void setImc(BigDecimal imc) {
         this.imc = imc;
     }
 

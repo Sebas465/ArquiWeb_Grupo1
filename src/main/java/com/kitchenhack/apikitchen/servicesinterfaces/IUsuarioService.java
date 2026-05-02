@@ -21,5 +21,10 @@ public interface IUsuarioService {
 
     // Elimina un usuario por su identificador.
     void delete(int id);
+
+    // Comprueba existencia por email/username para validaciones en controlador.
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
 }
 

@@ -39,5 +39,15 @@ public class UsuarioServiceImplement implements IUsuarioService {
     public void delete(int id) {
         usuarioRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return usuarioRepository.existsByUsername(username);
+    }
 }
 
