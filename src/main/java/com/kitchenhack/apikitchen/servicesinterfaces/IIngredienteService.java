@@ -30,4 +30,9 @@ public interface IIngredienteService {
 
     // Busca ingredientes por nombre y tipo simultáneamente
     List<Ingrediente> searchByNombreAndTipo(String nombre, Long tipoIngredienteId);
+
+    // US-P2-07
+    boolean existePorId(int id);
+
+    Optional<Ingrediente> listarPorId(int id);
 }

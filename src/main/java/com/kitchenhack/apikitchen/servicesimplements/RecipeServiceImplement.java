@@ -1,6 +1,8 @@
 package com.kitchenhack.apikitchen.servicesimplements;
 
+import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
+import com.kitchenhack.apikitchen.repositories.RecetaDetalleRepository;
 import com.kitchenhack.apikitchen.repositories.RecipeRepository;
 import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class RecipeServiceImplement implements IRecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RecetaDetalleRepository recetaDetalleRepository;
 
     @Override
     public List<Recipe> list() {
@@ -50,4 +55,10 @@ public class RecipeServiceImplement implements IRecipeService {
     public List<Recipe> findByPublishedTrue() {
         return recipeRepository.findByPublishedTrue();
     }
+
+    @Override
+    public RecetaDetalle registrarDetalle(RecetaDetalle detalle) {
+        return recetaDetalleRepository.save(detalle);
+    }
+
 }

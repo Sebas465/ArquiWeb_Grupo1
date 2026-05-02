@@ -2,6 +2,7 @@ package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "receta")
@@ -32,6 +33,14 @@ public class Recipe {
 
     @Column(name = "ultima_act")
     private LocalDateTime ultimaActualizacion;
+
+    //Sirve para RecipeController
+    @OneToMany(mappedBy = "idReceta") // 'idReceta' es el nombre del campo en RecetaDetalle
+    private List<RecetaDetalle> detalles;
+
+    public List<RecetaDetalle> getDetalles() {
+        return detalles;
+    }
 
     public Recipe() {
     }

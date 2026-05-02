@@ -1,5 +1,6 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
+import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
 
 import java.math.BigDecimal;
@@ -29,5 +30,7 @@ public interface IRecipeService {
     // US-P2-04: (Opcional pero recomendado) Listar solo publicadas
     List<Recipe> findByPublishedTrue();
 
+    // US-P2-07
+    RecetaDetalle registrarDetalle(RecetaDetalle detalle);
 }
 

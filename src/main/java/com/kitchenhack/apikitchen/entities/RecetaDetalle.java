@@ -1,5 +1,6 @@
 package com.kitchenhack.apikitchen.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,7 @@ public class RecetaDetalle {
 
     @ManyToOne
     @JoinColumn(name = "id_receta", nullable = false)
+    @JsonIgnore
     private Recipe idReceta;
 
     @ManyToOne
