@@ -1,6 +1,8 @@
 package com.kitchenhack.apikitchen.servicesimplements;
 
+import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
+import com.kitchenhack.apikitchen.repositories.RecetaDetalleRepository;
 import com.kitchenhack.apikitchen.repositories.RecipeRepository;
 import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class RecipeServiceImplement implements IRecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RecetaDetalleRepository recetaDetalleRepository;
 
     @Override
     public List<Recipe> list() {
@@ -32,18 +37,28 @@ public class RecipeServiceImplement implements IRecipeService {
     }
 
     @Override
-    public Optional<Recipe> listId(Integer id) {
+    public Optional<Recipe> listId(Long id) {
         return recipeRepository.findById(id);
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         recipeRepository.deleteById(id);
     }
 
     @Override
-    public List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal) {
-        // Current DB schema doesn't have category or calorie columns; return published recipes
-        return recipeRepository.findPublishedRecipes();
+    public List<Recipe> findByDifficulty(String difficulty) {
+        return recipeRepository.findByDifficulty(difficulty);
     }
+
+    @Override
+    public List<Recipe> findByPublishedTrue() {
+        return recipeRepository.findByPublishedTrue();
+    }
+
+    @Override
+    public RecetaDetalle registrarDetalle(RecetaDetalle detalle) {
+        return recetaDetalleRepository.save(detalle);
+    }
+
 }

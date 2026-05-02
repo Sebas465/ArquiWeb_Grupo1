@@ -1,5 +1,6 @@
 package com.kitchenhack.apikitchen.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -13,6 +14,7 @@ public class RecetaDetalle {
 
     @ManyToOne
     @JoinColumn(name = "id_receta", nullable = false)
+    @JsonIgnore
     private Recipe idReceta;
 
     @ManyToOne

@@ -1,12 +1,11 @@
 package com.kitchenhack.apikitchen.dtos;
 
+import java.util.List;
 
-public class RecipeDTO {
-
+public class RecipeFDDTO {
     private String title;
-    private String description;
     private String difficulty;
-    private Long idAutor;
+    private List<RecipeItemDTO> items;
 
     public String getTitle() {
         return title;
@@ -14,14 +13,6 @@ public class RecipeDTO {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getDifficulty() {
@@ -32,12 +23,11 @@ public class RecipeDTO {
         this.difficulty = difficulty;
     }
 
-    public Long getIdAutor() {
-        return idAutor;
+    public List<RecipeItemDTO> getItems() {
+        return items;
     }
 
-    public void setIdAutor(Long idAutor) {
-        this.idAutor = idAutor;
+    public void setItems(List<RecipeItemDTO> items) {
+        this.items = items;
     }
 }
-

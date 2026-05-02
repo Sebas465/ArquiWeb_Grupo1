@@ -1,64 +1,73 @@
 package com.kitchenhack.apikitchen.controllers;
 
 import com.kitchenhack.apikitchen.dtos.IngredienteDTO;
-import com.kitchenhack.apikitchen.entities.Etiqueta;
 import com.kitchenhack.apikitchen.entities.Ingrediente;
 import com.kitchenhack.apikitchen.servicesinterfaces.IIngredienteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ingredientes")
+@CrossOrigin(origins = "*")
 public class IngredienteController {
 
 	@Autowired
 	private IIngredienteService ingredienteService;
 
 	@GetMapping
-	public ResponseEntity<List<IngredienteDTO>> listar(@RequestParam(name = "tipo", required = false) Integer tipo) {
-		// Si se pasa tipo, filtrar por tipo; si no, listar todos.
-		List<Ingrediente> ingredientes = (tipo == null) ? ingredienteService.list() : ingredienteService.findByTipo(tipo);
+	public ResponseEntity<?> listar(@RequestParam(name = "idEtiqueta", required = false) Integer idEtiqueta) {
 		ModelMapper m = new ModelMapper();
+		List<Ingrediente> ingredientes = (idEtiqueta == null)
+				? ingredienteService.list()
+				: ingredienteService.findByTipo(idEtiqueta);
+
+		if (ingredientes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("No hay ingredientes registrados");
+		}
+
+		List<IngredienteDTO> listaIngredientes = ingredientes
+				.stream()
+				.map(x -> m.map(x, IngredienteDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(listaIngredientes);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre", required = true) String nombre) {
+		ModelMapper m = new ModelMapper();
+		List<Ingrediente> ingredientes = ingredienteService.searchByNombre(nombre);
 		List<IngredienteDTO> listaIngredientes = ingredientes
 				.stream().map(x -> m.map(x, IngredienteDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(listaIngredientes);
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<List<IngredienteDTO>> buscarPorNombre(@RequestParam(name = "nombre") String nombre) {
-		List<Ingrediente> ingredientes = ingredienteService.searchByNombre(nombre);
-		List<IngredienteDTO> listaIngredientes = ingredientes
-				.stream().map(this::toDTO)
-				.collect(Collectors.toList());
-		return ResponseEntity.ok(listaIngredientes);
-	}
-
 	@GetMapping("/search-advanced")
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
-			@RequestParam(name = "nombre") String nombre,
-			@RequestParam(name = "tipo", required = false) Integer tipo) {
+			@RequestParam(name = "nombre", required = true) String nombre,
+			@RequestParam(name = "tipo", required = false) Long tipo) {
+		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
 		List<IngredienteDTO> listaIngredientes = ingredientes
-				.stream().map(this::toDTO)
+				.stream().map(x -> m.map(x, IngredienteDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(listaIngredientes);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+		ModelMapper m = new ModelMapper();
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
 		if (ingrediente.isPresent()) {
-			ModelMapper m = new ModelMapper();
 			IngredienteDTO dto = m.map(ingrediente.get(), IngredienteDTO.class);
 			return ResponseEntity.ok(dto);
 		} else {
@@ -67,31 +76,40 @@ public class IngredienteController {
 		}
 	}
 
-	@PostMapping("/nuevo")
-	public ResponseEntity<IngredienteDTO> registrar(@RequestBody IngredienteDTO dto) {
-		if (dto.getUnidadMedida() == null || dto.getUnidadMedida().isBlank()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	@PostMapping
+	public ResponseEntity<?> crear(@RequestBody IngredienteDTO dto) {
+		if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("El nombre es obligatorio");
 		}
 
 		ModelMapper m = new ModelMapper();
-		Ingrediente ingrediente = m.map(dto, Ingrediente.class);
-		if (dto.getIdEtiqueta() != null) {
-			Etiqueta etiqueta = new Etiqueta();
-			etiqueta.setId(dto.getIdEtiqueta());
-			ingrediente.setIdEtiqueta(etiqueta);
-		}
-		ingrediente.setCalorias100(toBigDecimal(dto.getCalorias100()));
-		ingrediente.setProteinas100(toBigDecimal(dto.getProteinas100()));
-		ingrediente.setCarbos100(toBigDecimal(dto.getCarbos100()));
-		ingrediente.setGrasas100(toBigDecimal(dto.getGrasas100()));
 
-		Ingrediente saved = ingredienteService.insert(ingrediente);
-		IngredienteDTO responseDTO = m.map(saved, IngredienteDTO.class);
-		return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+		try {
+			Ingrediente ingrediente = m.map(dto, Ingrediente.class);
+			ingrediente.setId(0);
+
+			Ingrediente saved = ingredienteService.insert(ingrediente);
+
+			IngredienteDTO responseDTO = m.map(saved, IngredienteDTO.class);
+			return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+		} catch (Exception e) {
+			Throwable rootCause = org.springframework.core.NestedExceptionUtils.getMostSpecificCause(e);
+			String message = rootCause.getMessage();
+
+			if (message != null && (message.contains("id_etiqueta") || message.contains("fkey") || message.contains("foreign key"))) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("Etiqueta no encontrada");
+			}
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error interno al procesar el ingrediente: " + (message != null ? message : "Desconocido"));
+		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody IngredienteDTO dto) {
+	public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody IngredienteDTO dto) {
 		Optional<Ingrediente> existente = ingredienteService.listId(id);
 		if (existente.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -100,29 +118,8 @@ public class IngredienteController {
 
 		// Reutilizar la entidad encontrada y modificar solo los campos permitidos.
 		Ingrediente ingrediente = existente.get();
-		if (dto.getNombre() != null) {
-			ingrediente.setNombre(dto.getNombre());
-		}
-		if (dto.getUnidadMedida() != null) {
-			ingrediente.setUnidadMedida(dto.getUnidadMedida());
-		}
-		if (dto.getIdEtiqueta() != null) {
-			Etiqueta etiqueta = new Etiqueta();
-			etiqueta.setId(dto.getIdEtiqueta());
-			ingrediente.setIdEtiqueta(etiqueta);
-		}
-		if (dto.getCalorias100() != null) {
-			ingrediente.setCalorias100(toBigDecimal(dto.getCalorias100()));
-		}
-		if (dto.getProteinas100() != null) {
-			ingrediente.setProteinas100(toBigDecimal(dto.getProteinas100()));
-		}
-		if (dto.getCarbos100() != null) {
-			ingrediente.setCarbos100(toBigDecimal(dto.getCarbos100()));
-		}
-		if (dto.getGrasas100() != null) {
-			ingrediente.setGrasas100(toBigDecimal(dto.getGrasas100()));
-		}
+		ingrediente.setNombre(dto.getNombre());
+		ingrediente.setIdEtiqueta(dto.getIdEtiqueta());
 
 		ingredienteService.update(ingrediente);
 
@@ -130,7 +127,7 @@ public class IngredienteController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+	public ResponseEntity<?> eliminar(@PathVariable Long id) {
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
 		if (ingrediente.isPresent()) {
@@ -140,23 +137,6 @@ public class IngredienteController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("Ingrediente no encontrado");
 		}
-	}
-
-	private BigDecimal toBigDecimal(Double value) {
-		return value == null ? null : BigDecimal.valueOf(value);
-	}
-
-	private IngredienteDTO toDTO(Ingrediente ingrediente) {
-		IngredienteDTO dto = new IngredienteDTO();
-		dto.setId(ingrediente.getId());
-		dto.setNombre(ingrediente.getNombre());
-		dto.setUnidadMedida(ingrediente.getUnidadMedida());
-		dto.setIdEtiqueta(ingrediente.getIdEtiqueta() != null ? ingrediente.getIdEtiqueta().getId() : null);
-		dto.setCalorias100(ingrediente.getCalorias100());
-		dto.setProteinas100(ingrediente.getProteinas100());
-		dto.setCarbos100(ingrediente.getCarbos100());
-		dto.setGrasas100(ingrediente.getGrasas100());
-		return dto;
 	}
 }
 

@@ -2,6 +2,7 @@ package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "receta")
@@ -9,7 +10,7 @@ public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "titulo", nullable = false)
     private String title;
@@ -33,11 +34,18 @@ public class Recipe {
     @Column(name = "ultima_act")
     private LocalDateTime ultimaActualizacion;
 
-    // Constructor sin-args requerido por JPA
+    //Sirve para RecipeController
+    @OneToMany(mappedBy = "idReceta") // 'idReceta' es el nombre del campo en RecetaDetalle
+    private List<RecetaDetalle> detalles;
+
+    public List<RecetaDetalle> getDetalles() {
+        return detalles;
+    }
+
     public Recipe() {
     }
 
-    public Recipe(Integer id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Boolean published, LocalDateTime ultimaActualizacion) {
+    public Recipe(Long id, String title, String description, Usuario idAutor, Integer prepTimeMinutes, String difficulty, Long categoryId, Double totalCalories, Double averageRating, Boolean published, LocalDateTime ultimaActualizacion) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -48,11 +56,11 @@ public class Recipe {
         this.ultimaActualizacion = ultimaActualizacion;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

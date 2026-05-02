@@ -1,6 +1,7 @@
 package com.kitchenhack.apikitchen.entities;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -9,7 +10,7 @@ public class Ingrediente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @Column(nullable = false, unique = true, length = 150)
     private String nombre;
@@ -37,7 +38,7 @@ public class Ingrediente {
     public Ingrediente() {
     }
 
-    public Ingrediente(Integer id, String nombre, String unidadMedida, Etiqueta idEtiqueta, BigDecimal calorias100, BigDecimal proteinas100, BigDecimal carbos100, BigDecimal grasas100) {
+    public Ingrediente(int id, String nombre, String unidadMedida, Etiqueta idEtiqueta, BigDecimal calorias100, BigDecimal proteinas100, BigDecimal carbos100, BigDecimal grasas100) {
         this.id = id;
         this.nombre = nombre;
         this.unidadMedida = unidadMedida;
@@ -48,11 +49,11 @@ public class Ingrediente {
         this.grasas100 = grasas100;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -80,32 +81,32 @@ public class Ingrediente {
         this.idEtiqueta = idEtiqueta;
     }
 
-    public Double getCalorias100() {
-        return calorias100 != null ? calorias100.doubleValue() : null;
+    public BigDecimal getCalorias100() {
+        return calorias100;
     }
 
     public void setCalorias100(BigDecimal calorias100) {
         this.calorias100 = calorias100;
     }
 
-    public Double getProteinas100() {
-        return proteinas100 != null ? proteinas100.doubleValue() : null;
+    public BigDecimal getProteinas100() {
+        return proteinas100;
     }
 
     public void setProteinas100(BigDecimal proteinas100) {
         this.proteinas100 = proteinas100;
     }
 
-    public Double getCarbos100() {
-        return carbos100 != null ? carbos100.doubleValue() : null;
+    public BigDecimal getCarbos100() {
+        return carbos100;
     }
 
     public void setCarbos100(BigDecimal carbos100) {
         this.carbos100 = carbos100;
     }
 
-    public Double getGrasas100() {
-        return grasas100 != null ? grasas100.doubleValue() : null;
+    public BigDecimal getGrasas100() {
+        return grasas100;
     }
 
     public void setGrasas100(BigDecimal grasas100) {

@@ -1,5 +1,6 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
+import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
 
 import java.math.BigDecimal;
@@ -23,7 +24,13 @@ public interface IRecipeService {
     // Elimina por id.
     void delete(Integer id);
 
-    // Explora recetas publicadas (filtrado simple) y devuelve entidades.
-    List<Recipe> explorePublished(Integer categoriaId, BigDecimal maxCal);
+    // US-P2-08: Filtrar por dificultad
+    List<Recipe> findByDifficulty(String difficulty);
+
+    // US-P2-04: (Opcional pero recomendado) Listar solo publicadas
+    List<Recipe> findByPublishedTrue();
+
+    // US-P2-07
+    RecetaDetalle registrarDetalle(RecetaDetalle detalle);
 }
 
