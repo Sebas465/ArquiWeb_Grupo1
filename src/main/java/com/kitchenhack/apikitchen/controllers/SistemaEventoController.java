@@ -108,7 +108,7 @@ public class SistemaEventoController {
     private SistemaEventoDTO toDTO(SistemaEvento evento) {
         SistemaEventoDTO dto = new SistemaEventoDTO();
         dto.setId(evento.getId());
-        dto.setIdUsuario(evento.getUsuario() != null ? evento.getUsuario().getId() : null);
+        dto.setIdUsuario(evento.getUsuario() != null ? evento.getUsuario().getId().intValue() : null);
         dto.setTipo(evento.getTipo());
         dto.setTitulo(evento.getTitulo());
         dto.setContenido(evento.getContenido());

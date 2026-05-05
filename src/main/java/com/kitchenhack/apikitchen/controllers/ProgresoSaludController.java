@@ -125,7 +125,7 @@ public class ProgresoSaludController {
     private ProgresoSaludDTO toDTO(ProgresoSalud p) {
         ProgresoSaludDTO dto = new ProgresoSaludDTO();
         dto.setId(p.getId());
-        dto.setUsuarioId(p.getIdUsuario() != null ? p.getIdUsuario().getId() : null);
+        dto.setUsuarioId(p.getIdUsuario() != null ? p.getIdUsuario().getId().intValue() : null);
         dto.setFecha(p.getFecha());
         dto.setPesoKg(p.getPesoKg());
         dto.setTallaCm(p.getTallaCm());

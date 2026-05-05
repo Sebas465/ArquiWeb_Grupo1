@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -242,7 +241,7 @@ public class RecipeController {
             }
 
             nuevoDetalle.setIdIngrediente(ingOpt.get());
-            nuevoDetalle.setCantidad(dto.getCantidad());
+            nuevoDetalle.setCantidad(dto.getCantidad() != null ? java.math.BigDecimal.valueOf(dto.getCantidad()) : null);
             nuevoDetalle.setContenido(null); // Limpieza
 
         } else {
