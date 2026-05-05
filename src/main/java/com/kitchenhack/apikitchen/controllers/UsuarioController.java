@@ -52,6 +52,21 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/buscar-email")
+    public ResponseEntity<?> buscarPorEmail(@RequestParam String email) {
+        ModelMapper m = new ModelMapper();
+        java.util.Optional<Usuario> usuario = usuarioService.findByEmail(email);
+
+        if (usuario.isPresent()) {
+            UsuarioDTO dto = m.map(usuario.get(), UsuarioDTO.class);
+            dto.setContrasenaHash(null);
+            return ResponseEntity.ok(dto);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+    }
+
+
     @PostMapping("/nuevo")
     public ResponseEntity<?> registrar(@RequestBody UsuarioDTO dto) {
         if (dto.getContrasenaHash() == null || dto.getContrasenaHash().isBlank()) {
