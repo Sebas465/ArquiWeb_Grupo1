@@ -13,6 +13,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	@Query("select u from Usuario u where lower(u.email) = lower(:email)")
 	Optional<Usuario> findByEmailJPQL(@Param("email") String email);
 
+	Optional<Usuario> findByUsername(String username);
+
 	boolean existsByEmail(String email);
 
 	boolean existsByUsername(String username);
