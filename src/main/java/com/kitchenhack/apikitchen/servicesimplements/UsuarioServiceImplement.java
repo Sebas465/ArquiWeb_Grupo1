@@ -31,8 +31,12 @@ public class UsuarioServiceImplement implements IUsuarioService {
     }
 
     @Override
-    public Optional<Usuario> listId(int id) {
+    public Optional<Usuario> listId(Long id) {
         return usuarioRepository.findById(id);
+    }
+
+    public Optional<Usuario> listId(Integer id) {
+        return id == null ? Optional.empty() : usuarioRepository.findById(id.longValue());
     }
 
     @Override
@@ -40,19 +44,15 @@ public class UsuarioServiceImplement implements IUsuarioService {
         return usuarioRepository.findByEmailJPQL(email);
     }
 
-    // Sobrecarga de compatibilidad para referencias con Integer.
-    public Optional<Usuario> listId(Integer id) {
-        return usuarioRepository.findById(id);
-    }
-
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }
 
-    // Sobrecarga de compatibilidad para referencias con Integer.
     public void delete(Integer id) {
-        usuarioRepository.deleteById(id);
+        if (id != null) {
+            usuarioRepository.deleteById(id.longValue());
+        }
     }
 
     @Override

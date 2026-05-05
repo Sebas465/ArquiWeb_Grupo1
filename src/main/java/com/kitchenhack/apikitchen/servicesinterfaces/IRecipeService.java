@@ -3,7 +3,6 @@ package com.kitchenhack.apikitchen.servicesinterfaces;
 import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +20,10 @@ public interface IRecipeService {
     // Busca por id.
     Optional<Recipe> listId(Long id);
 
+
     // Elimina por id.
     void delete(Long id);
+
 
     // US-P2-08: Filtrar por dificultad
     List<Recipe> findByDifficulty(String difficulty);

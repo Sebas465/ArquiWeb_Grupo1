@@ -30,7 +30,7 @@ public class ProgresoSaludController {
     public ResponseEntity<List<ProgresoSaludDTO>> listar() {
         ModelMapper m = new ModelMapper();
         List<ProgresoSaludDTO> lista = progresoSaludService.list()
-                .stream().map(x -> m.map(x, ProgresoSaludDTO.class)).collect(Collectors.toList());
+                .stream().map(p -> toDTO(p, m)).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
 
@@ -38,8 +38,7 @@ public class ProgresoSaludController {
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         Optional<ProgresoSalud> opt = progresoSaludService.listId(id);
         if (opt.isPresent()) {
-            ModelMapper m = new ModelMapper();
-            return ResponseEntity.ok(m.map(opt.get(), ProgresoSaludDTO.class));
+            return ResponseEntity.ok(toDTO(opt.get(), new ModelMapper()));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Progreso de salud no encontrado");
         }
@@ -47,6 +46,7 @@ public class ProgresoSaludController {
 
     @PostMapping("/nuevo")
     public ResponseEntity<ProgresoSaludDTO> registrar(@RequestBody ProgresoSaludDTO dto) {
+        ModelMapper m = new ModelMapper();
         // Validar usuario existe
         if (dto.getUsuarioId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -56,19 +56,15 @@ public class ProgresoSaludController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        // Crear entidad con usuario entity (no Integer)
-        ProgresoSalud p = new ProgresoSalud(
-                null,
-                usuarioOpt.get(),
-                dto.getFecha(),
-                toBigDecimal(dto.getPesoKg()),
-                dto.getTallaCm(),
-                toBigDecimal(dto.getImc()),
-                dto.getAlergias());
+        // ModelMapper mapea los campos planos; la relación Usuario se asigna manualmente
+        ProgresoSalud p = m.map(dto, ProgresoSalud.class);
+        p.setId(null);
+        p.setIdUsuario(usuarioOpt.get());
+        p.setPesoKg(toBigDecimal(dto.getPesoKg()));
+        p.setImc(toBigDecimal(dto.getImc()));
 
         ProgresoSalud saved = progresoSaludService.insert(p);
-        ModelMapper m = new ModelMapper();
-        ProgresoSaludDTO response = m.map(saved, ProgresoSaludDTO.class);
+        ProgresoSaludDTO response = toDTO(saved, m);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -122,15 +118,9 @@ public class ProgresoSaludController {
         return value == null ? null : BigDecimal.valueOf(value);
     }
 
-    private ProgresoSaludDTO toDTO(ProgresoSalud p) {
-        ProgresoSaludDTO dto = new ProgresoSaludDTO();
-        dto.setId(p.getId());
-        dto.setUsuarioId(p.getIdUsuario() != null ? p.getIdUsuario().getId().intValue() : null);
-        dto.setFecha(p.getFecha());
-        dto.setPesoKg(p.getPesoKg());
-        dto.setTallaCm(p.getTallaCm());
-        dto.setImc(p.getImc());
-        dto.setAlergias(p.getAlergias());
+    private ProgresoSaludDTO toDTO(ProgresoSalud p, ModelMapper m) {
+        ProgresoSaludDTO dto = m.map(p, ProgresoSaludDTO.class);
+        dto.setUsuarioId(p.getIdUsuario() != null ? p.getIdUsuario().getId() : null);
         return dto;
     }
 }

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class ProgresoSaludDTO {
 
     private Integer id;
-    private Integer usuarioId;
+    private Long usuarioId;
     private LocalDate fecha;
     private Double pesoKg;
     private Integer tallaCm;
@@ -20,12 +20,16 @@ public class ProgresoSaludDTO {
         this.id = id;
     }
 
-    public Integer getUsuarioId() {
+    public Long getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(Integer usuarioId) {
+    public void setUsuarioId(Long usuarioId) {
         this.usuarioId = usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId != null ? usuarioId.longValue() : null;
     }
 
     public LocalDate getFecha() {

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class SistemaEventoDTO {
 
     private Integer id;
-    private Integer idUsuario;
+    private Long idUsuario;
     private String tipo;
     private String titulo;
     private String contenido;
@@ -20,12 +20,16 @@ public class SistemaEventoDTO {
         this.id = id;
     }
 
-    public Integer getIdUsuario() {
+    public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Integer idUsuario) {
+    public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario != null ? idUsuario.longValue() : null;
     }
 
     public String getTipo() {

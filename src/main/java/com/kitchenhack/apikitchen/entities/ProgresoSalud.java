@@ -45,7 +45,7 @@ public class ProgresoSalud {
         this.alergias = alergias;
     }
 
-    public ProgresoSalud(Object o, Integer usuarioId, String alergias) {
+    public ProgresoSalud(Object o, Long usuarioId, String alergias) {
     }
 
     public Integer getId() {
@@ -104,7 +104,7 @@ public class ProgresoSalud {
         this.alergias = alergias;
     }
 
-    public void setUsuarioId(Integer usuarioId) {
+    public void setUsuarioId(Long usuarioId) {
     }
 }
 

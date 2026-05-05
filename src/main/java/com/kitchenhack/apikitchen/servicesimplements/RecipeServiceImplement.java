@@ -8,7 +8,6 @@ import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,14 +35,18 @@ public class RecipeServiceImplement implements IRecipeService {
         recipeRepository.save(recipe);
     }
 
+
     @Override
     public Optional<Recipe> listId(Long id) {
-        return recipeRepository.findById(id);
+        return id == null ? Optional.empty() : recipeRepository.findById(id);
     }
+
 
     @Override
     public void delete(Long id) {
-        recipeRepository.deleteById(id);
+        if (id != null) {
+            recipeRepository.deleteById(id);
+        }
     }
 
     @Override

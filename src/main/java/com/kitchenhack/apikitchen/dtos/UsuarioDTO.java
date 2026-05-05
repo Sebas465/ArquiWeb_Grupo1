@@ -2,7 +2,7 @@ package com.kitchenhack.apikitchen.dtos;
 
 public class UsuarioDTO {
 
-    private Integer id;
+    private Long id;
     private String username;
     private String nombre;
     private String apellido;
@@ -10,12 +10,16 @@ public class UsuarioDTO {
     private String contrasenaHash;
     private Integer idRol;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id != null ? id.longValue() : null;
     }
 
     public String getUsername() {

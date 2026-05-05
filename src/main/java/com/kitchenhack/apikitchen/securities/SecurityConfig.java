@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,16 +29,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(jwtUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
+        return authentication -> {
+            if (!(authentication instanceof UsernamePasswordAuthenticationToken token)) {
+                throw new BadCredentialsException("Tipo de autenticación no soportado");
+            }
+
+            String username = token.getName();
+            String rawPassword = String.valueOf(token.getCredentials());
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+
+            if (!passwordEncoder().matches(rawPassword, userDetails.getPassword())) {
+                throw new BadCredentialsException("Credenciales inválidas");
+            }
+
+            return new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    rawPassword,
+                    userDetails.getAuthorities()
+            );
+        };
     }
 
     @Bean
@@ -49,7 +60,6 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .authenticationProvider(authenticationProvider())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
