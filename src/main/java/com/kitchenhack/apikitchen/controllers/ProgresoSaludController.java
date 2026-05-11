@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -116,6 +119,30 @@ public class ProgresoSaludController {
 
     private BigDecimal toBigDecimal(Double value) {
         return value == null ? null : BigDecimal.valueOf(value);
+    }
+
+    // US-P4-S2-03 — Listar mediciones de un usuario filtradas por rango de fechas
+    // GET /progreso-salud/usuario/{id}?inicio=2026-01-01&fin=2026-04-30
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<?> listarPorUsuarioYRango(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
+
+        List<ProgresoSalud> lista = progresoSaludService.listByUsuarioAndRango(id, inicio, fin);
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Sin registros en ese periodo");
+        }
+
+        // Convertir cada entidad a DTO para la respuesta
+        ModelMapper m = new ModelMapper();
+        List<ProgresoSaludDTO> listaDTO = lista.stream()
+                .map(p -> toDTO(p, m))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(listaDTO);
     }
 
     private ProgresoSaludDTO toDTO(ProgresoSalud p, ModelMapper m) {

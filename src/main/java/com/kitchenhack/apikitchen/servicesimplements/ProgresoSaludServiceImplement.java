@@ -6,6 +6,7 @@ import com.kitchenhack.apikitchen.servicesinterfaces.IProgresoSaludService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,11 @@ public class ProgresoSaludServiceImplement implements IProgresoSaludService {
     @Override
     public void delete(Integer id) {
         progresoSaludRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProgresoSalud> listByUsuarioAndRango(Long usuarioId, LocalDate inicio, LocalDate fin) {
+        return progresoSaludRepository.findByIdUsuario_IdAndFechaBetween(usuarioId, inicio, fin);
     }
 }
 
