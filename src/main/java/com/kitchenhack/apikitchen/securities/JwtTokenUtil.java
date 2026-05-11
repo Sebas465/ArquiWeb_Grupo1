@@ -22,6 +22,40 @@ public class JwtTokenUtil {
                 .encodeToString((payload + ":" + signature).getBytes(StandardCharsets.UTF_8));
     }
 
+    // Extrae el username del token decodificando Base64 y tomando la primera parte
+    public String extractUsername(String token) {
+        try {
+            String decoded = new String(Base64.getUrlDecoder().decode(token), StandardCharsets.UTF_8);
+            // Formato: username:timestamp:expiry:signature
+            return decoded.split(":")[0];
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // Valida que el token no haya expirado y que la firma sea correcta
+    public boolean validateToken(String token) {
+        try {
+            String decoded = new String(Base64.getUrlDecoder().decode(token), StandardCharsets.UTF_8);
+            String[] parts = decoded.split(":");
+            // parts[0]=username, parts[1]=issuedAt, parts[2]=expiry, parts[3]=signature
+            if (parts.length < 4) return false;
+
+            String username = parts[0];
+            long expiry = Long.parseLong(parts[2]);
+            String receivedSig = parts[3];
+
+            // Verificar que el token no haya expirado
+            if (System.currentTimeMillis() > expiry) return false;
+
+            // Verificar que la firma coincida (evita tokens manipulados)
+            String expectedSig = sign(username + ":" + parts[1] + ":" + expiry);
+            return expectedSig.equals(receivedSig);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private String sign(String value) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");

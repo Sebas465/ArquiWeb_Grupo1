@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kitchenhack.apikitchen.dtos.JwtRequestDTO;
 import com.kitchenhack.apikitchen.dtos.JwtResponseDTO;
 import com.kitchenhack.apikitchen.securities.JwtTokenUtil;
-import com.kitchenhack.apikitchen.servicesimplements.JwtUserDetailsService;
 
 
 @RestController
