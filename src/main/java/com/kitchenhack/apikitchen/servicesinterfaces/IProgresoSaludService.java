@@ -5,6 +5,7 @@ import com.kitchenhack.apikitchen.entities.ProgresoSalud;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface IProgresoSaludService {
 
     // Lista todas las entidades ProgresoSalud.

@@ -47,7 +47,8 @@ public class PlanMaestroController {
         List<PlanMaestroDTO> listaDTO = lista.stream()
                 .map(p -> {
                     PlanMaestroDTO dto = m.map(p, PlanMaestroDTO.class);
-                    dto.setIdAutor(p.getIdAutor() != null ? p.getIdAutor().getId().intValue() : null);
+                    // getId() retorna Long — se asigna directo sin conversión
+                    dto.setIdAutor(p.getIdAutor() != null ? p.getIdAutor().getId() : null);
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -93,7 +94,7 @@ public class PlanMaestroController {
         // ModelMapper convierte la entidad guardada → DTO; idAutor se sobreescribe manualmente
         ModelMapper m = new ModelMapper();
         PlanMaestroDTO respuesta = m.map(guardado, PlanMaestroDTO.class);
-        respuesta.setIdAutor(guardado.getIdAutor().getId().intValue());
+        respuesta.setIdAutor(guardado.getIdAutor().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
@@ -112,7 +113,7 @@ public class PlanMaestroController {
         // ModelMapper mapea campos simples; idAutor se sobreescribe manualmente
         ModelMapper m = new ModelMapper();
         PlanMaestroDTO dto = m.map(opt.get(), PlanMaestroDTO.class);
-        dto.setIdAutor(opt.get().getIdAutor() != null ? opt.get().getIdAutor().getId().intValue() : null);
+        dto.setIdAutor(opt.get().getIdAutor() != null ? opt.get().getIdAutor().getId() : null);
         return ResponseEntity.ok(dto);
     }
 
