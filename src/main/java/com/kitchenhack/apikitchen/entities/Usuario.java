@@ -3,6 +3,14 @@ package com.kitchenhack.apikitchen.entities;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad JPA que representa la tabla `usuario`.
+ *
+ * Campos importantes:
+ * - username, email: únicos y no nulos
+ * - contrasenaHash: contraseña codificada
+ * - idRol: relación ManyToOne con la entidad {@link Rol}
+ */
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -77,6 +85,7 @@ public class Usuario {
     }
 
     public String getContrasenaHash() {
+        // Devuelve el hash de la contraseña. NO exponer este valor en responses.
         return contrasenaHash;
     }
 

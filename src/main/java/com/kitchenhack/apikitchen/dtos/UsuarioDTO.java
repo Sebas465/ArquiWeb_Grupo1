@@ -1,5 +1,12 @@
 package com.kitchenhack.apikitchen.dtos;
 
+/**
+ * DTO usado en las APIs para representar datos de Usuario.
+ *
+ * Nota: el campo `contrasenaHash` se utiliza como transporte de la contraseña
+ * desde el cliente en operaciones de registro/actualización. Nunca devolverlo
+ * en respuestas (se limpia a null antes de enviar).
+ */
 public class UsuarioDTO {
 
     private Long id;

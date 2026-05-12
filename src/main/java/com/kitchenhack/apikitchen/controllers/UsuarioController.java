@@ -19,6 +19,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
+    /**
+     * Controlador REST para la gestión de usuarios (CRUD).
+     *
+     * - Usa {@link IUsuarioService} para operaciones de persistencia.
+     * - Convierte entidades a DTOs con {@link org.modelmapper.ModelMapper}
+     * - Asegura no exponer la contraseña en las respuestas (contrasenaHash = null)
+     */
+
     @Autowired
     private IUsuarioService usuarioService;
 
@@ -27,6 +35,10 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<?> listar() {
+        /**
+         * Lista todos los usuarios como una colección de {@link com.kitchenhack.apikitchen.dtos.UsuarioDTO}.
+         * Devuelve 404 si no hay usuarios registrados.
+         */
         ModelMapper m = new ModelMapper();
         // Cada entidad se convierte a DTO para no devolver directamente la entidad JPA.
         List<UsuarioDTO> listaUsuarios = usuarioService.list()
@@ -40,6 +52,9 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        /**
+         * Busca un usuario por su id y devuelve su DTO sin la contraseña.
+         */
         ModelMapper m = new ModelMapper();
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
@@ -58,6 +73,9 @@ public class UsuarioController {
 
     @GetMapping("/buscar-email")
     public ResponseEntity<?> buscarPorEmail(@RequestParam String email) {
+        /**
+         * Busca un usuario por email (case-insensitive) y devuelve su DTO.
+         */
         ModelMapper m = new ModelMapper();
         java.util.Optional<Usuario> usuario = usuarioService.findByEmail(email);
 
@@ -73,6 +91,14 @@ public class UsuarioController {
 
     @PostMapping("/nuevo")
     public ResponseEntity<?> registrar(@RequestBody UsuarioDTO dto) {
+        /**
+         * Registra un nuevo usuario.
+         * - Valida presencia de contraseña
+         * - Valida unicidad de email y username
+         * - Mapea DTO -> entidad
+         * - Codifica la contraseña con {@link org.springframework.security.crypto.password.PasswordEncoder}
+         * - Persiste la entidad y devuelve el DTO creado (sin contrasenaHash)
+         */
         if (dto.getContrasenaHash() == null || dto.getContrasenaHash().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("contraseña es requerido");
         }
@@ -101,6 +127,9 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+        /**
+         * Actualiza los campos permitidos de un usuario existente.
+         */
         java.util.Optional<Usuario> existente = usuarioService.listId(id);
         if (existente.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -130,6 +159,9 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
+        /**
+         * Elimina un usuario por su id.
+         */
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
         if (usuario.isPresent()) {

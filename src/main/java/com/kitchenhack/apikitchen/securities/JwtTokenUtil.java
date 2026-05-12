@@ -16,7 +16,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//Clase 1
+// Clase 1
+/**
+ * Utilidad para creación, parseo y validación de JWT.
+ *
+ * NOTAS:
+ * - Lee la clave de firma desde la propiedad `jwt.secret` (debe estar en Base64 en
+ *   `application.properties` en este proyecto de ejemplo).
+ * - Genera tokens con un claim "roles" que contiene las autoridades del usuario
+ *   separadas por comas.
+ */
 @Component
 public class JwtTokenUtil{
 
@@ -42,6 +51,8 @@ public class JwtTokenUtil{
     }
 
     private Claims getAllClaims(String token) {
+        // Parsea el JWT y devuelve el conjunto de claims. Lanza excepciones
+        // de parseo si el token es inválido/firmado incorrectamente.
         return Jwts.parser()
                 .setSigningKey(secret)
                 .build()
@@ -81,6 +92,8 @@ public class JwtTokenUtil{
         Date expiration =
                 new Date(now.getTime() + TOKEN_VALIDITY);
 
+        // Construye y firma el JWT. El token incluye los claims y expira según
+        // TOKEN_VALIDITY.
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)

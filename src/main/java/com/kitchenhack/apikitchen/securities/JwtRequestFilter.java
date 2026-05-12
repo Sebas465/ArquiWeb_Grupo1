@@ -17,7 +17,12 @@ import com.kitchenhack.apikitchen.servicesimplements.JwtUserDetailsService;
 
 import java.io.IOException;
 
-//Clase 6
+/**
+ * Filtro que se ejecuta una vez por petición y se encarga de:
+ * - Extraer el header Authorization (Bearer token)
+ * - Validar el token JWT y, si es válido, poblar el SecurityContext con
+ *   una autenticación basada en {@link UsernamePasswordAuthenticationToken}
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
@@ -36,10 +41,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
+                // Extraer username del token (subject)
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
+                // Token mal formado
                 System.out.println("No se puede encontrar el token JWT");
             } catch (ExpiredJwtException e) {
+                // Token expirado
                 System.out.println("Token JWT ha expirado");
             }
         } else {
@@ -48,13 +56,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
 
-        // Once we get the token validate it.
+        // Una vez obtenido el username, validar el token y establecer la
+        // autenticación en el contexto de Spring Security para que los
+        // controladores posteriores vean al usuario autenticado.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // Cargar detalles del usuario desde la BD (roles, password, etc.)
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
-            // if token is valid configure Spring Security to manually set
-            // authentication
+            // Si el token es válido respecto a los detalles del usuario,
+            // crear una autenticación y establecerla en el contexto.
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

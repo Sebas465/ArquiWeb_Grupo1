@@ -17,6 +17,16 @@ import java.util.Optional;
 
 
 // Clase: servicio para cargar UserDetails usado por Spring Security
+/**
+ * Servicio que adapta la entidad `Usuario` del dominio al contrato
+ * {@link org.springframework.security.core.userdetails.UserDetailsService}.
+ *
+ * - Busca un usuario por username en la base de datos
+ * - Mappea el campo `idRol` a una {@link GrantedAuthority}
+ * - Devuelve un {@link org.springframework.security.core.userdetails.User}
+ *   con la contraseña almacenada (`contrasenaHash`) para que Spring la
+ *   compare usando el {@link org.springframework.security.crypto.password.PasswordEncoder}
+ */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
