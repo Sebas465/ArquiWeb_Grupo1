@@ -46,24 +46,30 @@ public class PlanMaestroController {
     private IEjercicioService ejercicioService;
 
     // US-P4-04 — Listar todos los planes maestros disponibles
-    // GET /planes → 200 con lista, o 404 si no hay ninguno
+    // US-P4-S2-05 — GET /planes?tipo=hibrido → filtra por tipo, o lista todos si no viene el param
     @GetMapping
-    public ResponseEntity<?> listarPlanes() {
-        List<PlanMaestro> lista = planMaestroService.list();
+    public ResponseEntity<?> listarPlanes(@RequestParam(required = false) String tipo) {
+        List<PlanMaestro> lista;
 
-        // Si no hay planes disponibles, se informa al cliente
-        if (lista.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No hay planes disponibles");
+        if (tipo != null) {
+            // Filtrar por tipo si viene el query param
+            lista = planMaestroService.listByTipo(tipo);
+            if (lista.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No hay planes de ese tipo");
+            }
+        } else {
+            lista = planMaestroService.list();
+            if (lista.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No hay planes disponibles");
+            }
         }
 
-        // ModelMapper mapea los campos simples; idAutor se sobreescribe manualmente
-        // porque el campo en la entidad es un objeto Usuario, no un Integer
         ModelMapper m = new ModelMapper();
         List<PlanMaestroDTO> listaDTO = lista.stream()
                 .map(p -> {
                     PlanMaestroDTO dto = m.map(p, PlanMaestroDTO.class);
-                    // getId() retorna Long — se asigna directo sin conversión
                     dto.setIdAutor(p.getIdAutor() != null ? p.getIdAutor().getId() : null);
                     return dto;
                 })
@@ -256,6 +262,6 @@ public class PlanMaestroController {
         planMaestroService.delete(id);
 
         // 204 No Content: eliminación exitosa, sin cuerpo en la respuesta
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("Eliminado Correctamente");
     }
 }

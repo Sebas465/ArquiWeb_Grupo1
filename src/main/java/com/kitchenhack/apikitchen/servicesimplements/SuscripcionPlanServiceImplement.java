@@ -6,6 +6,7 @@ import com.kitchenhack.apikitchen.servicesinterfaces.ISuscripcionPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 // Implementación del servicio de suscripciones a planes
@@ -27,7 +28,11 @@ public class SuscripcionPlanServiceImplement implements ISuscripcionPlanService 
 
     @Override
     public boolean existeSubscripcionActiva(Long usuarioId, Integer idPlan) {
-        // Consulta si ya existe una suscripción activa para ese usuario y plan
         return suscripcionPlanRepository.existsByIdUsuario_IdAndIdPlan_IdAndActivoTrue(usuarioId, idPlan);
+    }
+
+    @Override
+    public List<SuscripcionPlan> listActivasByUsuario(Long usuarioId) {
+        return suscripcionPlanRepository.findByIdUsuario_IdAndActivoTrue(usuarioId);
     }
 }

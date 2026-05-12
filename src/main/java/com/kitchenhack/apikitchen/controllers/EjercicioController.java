@@ -124,7 +124,7 @@ public class EjercicioController {
     }
 
     // CRUD — Eliminar un ejercicio del catálogo
-    // DELETE /ejercicios/eliminar/{id} → 204 si se eliminó, o 404 si no existe
+    // DELETE /ejercicios/eliminar/{id} → 200 con mensaje, o 404 si no existe
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarEjercicio(@PathVariable Integer id) {
         Optional<Ejercicio> opt = ejercicioService.listId(id);
@@ -135,7 +135,6 @@ public class EjercicioController {
         }
 
         ejercicioService.delete(id);
-        // 204 No Content: eliminación exitosa sin cuerpo en la respuesta
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Ejercicio eliminado correctamente");
     }
 }

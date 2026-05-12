@@ -40,4 +40,9 @@ public class PlanMaestroServiceImplement implements IPlanMaestroService {
     public void delete(Integer id) {
         planMaestroRepository.deleteById(id);
     }
+
+    @Override
+    public List<PlanMaestro> listByTipo(String tipoPlan) {
+        return planMaestroRepository.findByTipoPlan(tipoPlan);
+    }
 }

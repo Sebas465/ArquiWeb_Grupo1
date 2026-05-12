@@ -28,10 +28,6 @@ public class ProgresoSaludDTO {
         this.usuarioId = usuarioId;
     }
 
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId != null ? usuarioId.longValue() : null;
-    }
-
     public LocalDate getFecha() {
         return fecha;
     }
