@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -20,6 +21,9 @@ public class UsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<?> listar() {
@@ -80,7 +84,7 @@ public class UsuarioController {
 
         ModelMapper m = new ModelMapper();
         Usuario u = m.map(dto, Usuario.class);
-        // Asegurar rol y fechas como en la implementación previa
+        u.setContrasenaHash(passwordEncoder.encode(dto.getContrasenaHash()));
         Rol rol = new Rol();
         rol.setId(dto.getIdRol() != null ? dto.getIdRol() : 1);
         u.setIdRol(rol);

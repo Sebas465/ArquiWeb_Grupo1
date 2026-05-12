@@ -18,10 +18,6 @@ public class UsuarioDTO {
         this.id = id;
     }
 
-    public void setId(Integer id) {
-        this.id = id != null ? id.longValue() : null;
-    }
-
     public String getUsername() {
         return username;
     }
