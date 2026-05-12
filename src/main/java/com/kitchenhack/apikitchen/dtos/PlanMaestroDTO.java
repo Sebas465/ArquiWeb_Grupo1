@@ -34,10 +34,6 @@ public class PlanMaestroDTO {
         this.idAutor = idAutor;
     }
 
-    public void setIdAutor(Integer idAutor) {
-        this.idAutor = idAutor != null ? idAutor.longValue() : null;
-    }
-
     public String getTipoPlan() {
         return tipoPlan;
     }

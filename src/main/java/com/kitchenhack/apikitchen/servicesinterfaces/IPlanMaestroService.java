@@ -20,6 +20,8 @@ public interface IPlanMaestroService {
     // Actualiza los datos de un plan maestro existente
     void update(PlanMaestro plan);
 
-    // Elimina un plan maestro por su ID
     void delete(Integer id);
+
+    // US-P4-S2-05 — Filtra planes por tipo
+    List<PlanMaestro> listByTipo(String tipoPlan);
 }

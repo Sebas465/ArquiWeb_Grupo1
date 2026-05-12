@@ -28,10 +28,6 @@ public class SistemaEventoDTO {
         this.idUsuario = idUsuario;
     }
 
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario != null ? idUsuario.longValue() : null;
-    }
-
     public String getTipo() {
         return tipo;
     }
