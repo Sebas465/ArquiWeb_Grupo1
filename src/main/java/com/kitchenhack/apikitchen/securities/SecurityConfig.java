@@ -3,13 +3,11 @@ package com.kitchenhack.apikitchen.securities;
 import com.kitchenhack.apikitchen.servicesimplements.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,8 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity
+// @Configuration
+// @EnableWebSecurity
+// Nota: esta clase queda deshabilitada porque la configuración central de seguridad
+// se encuentra en `WebSecurityConfig`. Se conserva el archivo por referencia pero
+// no se registra como configuración Spring para evitar beans duplicados.
 public class SecurityConfig {
 
     @Autowired

@@ -1,15 +1,18 @@
 package com.kitchenhack.apikitchen.dtos;
 
-public class JwtResponseDTO {
+import java.io.Serializable;
 
-    private final String token;
+public class JwtResponseDTO implements Serializable {
 
-    public JwtResponseDTO(String token) {
-        this.token = token;
+    private final String jwttoken;
+
+    public String getJwttoken() {
+        return jwttoken;
     }
 
-    public String getToken() {
-        return token;
+    public JwtResponseDTO(String jwttoken) {
+        super();
+        this.jwttoken = jwttoken;
     }
+
 }
-

@@ -1,40 +1,53 @@
 package com.kitchenhack.apikitchen.servicesimplements;
 
-import com.kitchenhack.apikitchen.entities.Usuario;
-import com.kitchenhack.apikitchen.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.kitchenhack.apikitchen.entities.Usuario;
+import com.kitchenhack.apikitchen.entities.Rol;
+import com.kitchenhack.apikitchen.repositories.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+
+// Clase: servicio para cargar UserDetails usado por Spring Security
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioRepository repo;
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+        Optional<Usuario> opt = repo.findByUsername(username);
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (usuario.getIdRol() != null && usuario.getIdRol().getNombre() != null) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + usuario.getIdRol().getNombre().toUpperCase()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (opt.isEmpty()) {
+            throw new UsernameNotFoundException("User not exists: " + username);
         }
 
-        return new User(usuario.getUsername(), usuario.getContrasenaHash(), authorities);
+        Usuario user = opt.get();
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        Rol rol = user.getIdRol();
+        if (rol != null && rol.getNombre() != null) {
+            // Mantener el nombre tal cual (p. ej. ROLE_USER). Si usas hasRole(), asegúrate del prefijo ROLE_.
+            authorities.add(new SimpleGrantedAuthority(rol.getNombre()));
+        }
+
+        // Construir UserDetails con el username y el password (contrasenaHash ya almacenada en BD)
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getContrasenaHash(),
+                true, // enabled
+                true,
+                true,
+                true,
+                authorities
+        );
     }
 }
-
