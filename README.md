@@ -21,6 +21,6 @@
  - `GET /notificaciones` CRUD de notificaciones
 
  ## Nota
-
+##
  La API externa de ingredientes se configura en `src/main/resources/application.properties` con `external.ingredientes.api`.
 
