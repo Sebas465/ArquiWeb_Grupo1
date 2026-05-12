@@ -13,10 +13,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query("select u from Usuario u where lower(u.email) = lower(:email)")
 	Optional<Usuario> findByEmailJPQL(@Param("email") String email);
 
+	//BUSCAR POR NOMBRE
+	@Query("select count(u.username) from Usuario u where u.username =:username")
+	public int buscarUsername(@Param("username") String nombre);
+
+
 	Optional<Usuario> findByUsername(String username);
 
 	boolean existsByEmail(String email);
 
 	boolean existsByUsername(String username);
 
+	public Usuario findOneByUsername(String username);
 }

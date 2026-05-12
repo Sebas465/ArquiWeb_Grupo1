@@ -22,12 +22,15 @@ public class JwtAuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private com.kitchenhack.apikitchen.servicesimplements.JwtUserDetailsService userDetailsService;
 
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody JwtRequestDTO req) throws Exception {
         authenticate(req.getUsername(), req.getPassword());
-        final String token = jwtTokenUtil.generateToken(req.getUsername());
+        final org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponseDTO(token));
     }
 
