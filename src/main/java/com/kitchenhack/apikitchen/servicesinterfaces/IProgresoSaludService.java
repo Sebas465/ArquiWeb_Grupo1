@@ -25,6 +25,5 @@ public interface IProgresoSaludService {
     void delete(Integer id);
 
     // Retorna mediciones de un usuario filtradas por rango de fechas (US-P4-S2-03)
-    List<ProgresoSalud> listByUsuarioAndRango(Long usuarioId, LocalDate inicio, LocalDate fin);
+    List<ProgresoSalud> listByUsuarioAndRango(Integer usuarioId, LocalDate inicio, LocalDate fin);
 }
-

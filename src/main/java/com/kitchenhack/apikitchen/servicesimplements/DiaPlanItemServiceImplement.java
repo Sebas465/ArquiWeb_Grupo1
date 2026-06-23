@@ -6,27 +6,32 @@ import com.kitchenhack.apikitchen.servicesinterfaces.IDiaPlanItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
-// Implementación del servicio de ítems de días del plan
 @Service
 public class DiaPlanItemServiceImplement implements IDiaPlanItemService {
 
     @Autowired
-    private DiaPlanItemRepository diaPlanItemRepository;
+    private DiaPlanItemRepository dR;
 
     @Override
-    public DiaPlanItem insert(DiaPlanItem item) {
-        return diaPlanItemRepository.save(item);
+    public DiaPlanItem insert(DiaPlanItem diaPlanItem) {
+        return dR.save(diaPlanItem);
+    }
+
+    @Override
+    public List<DiaPlanItem> list() {
+        return dR.findAll();
     }
 
     @Override
     public Optional<DiaPlanItem> listId(Integer id) {
-        return diaPlanItemRepository.findById(id);
+        return dR.findById(id);
     }
 
     @Override
     public void delete(Integer id) {
-        diaPlanItemRepository.deleteById(id);
+        dR.deleteById(id);
     }
 }

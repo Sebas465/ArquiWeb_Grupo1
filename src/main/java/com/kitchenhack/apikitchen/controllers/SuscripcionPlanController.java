@@ -117,7 +117,7 @@ public class SuscripcionPlanController {
     // US-P4-S2-04 — Listar suscripciones activas de un usuario
     // GET /suscripciones/usuario/{id} → 200 con lista, 404 si no tiene suscripciones activas
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<?> listarActivasPorUsuario(@PathVariable Long id) {
+    public ResponseEntity<?> listarActivasPorUsuario(@PathVariable Integer id) {
         List<SuscripcionPlan> lista = suscripcionPlanService.listActivasByUsuario(id);
 
         if (lista.isEmpty()) {

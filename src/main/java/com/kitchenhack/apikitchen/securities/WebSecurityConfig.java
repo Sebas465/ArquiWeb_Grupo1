@@ -54,19 +54,23 @@ public class WebSecurityConfig {
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // Configuración recomendada para API REST + JWT
-        httpSecurity
+                httpSecurity.cors(Customizer.withDefaults()) // ¡Importante para que Spring Security integre CorsConfig!
                 .csrf(AbstractHttpConfigurer::disable)
-                // No crear/usar sesión en servidor: cada petición se autentica por token
+                .authorizeHttpRequests(req -> req
+                        // TODAS las rutas liberadas temporalmente para pruebas
+                        .anyRequest().permitAll()
+                )/*.csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
                         .requestMatchers("/login", "/usuarios/nuevo", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // Resto requiere autenticación
                         .anyRequest().authenticated()
-                )
+                )*/
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint));

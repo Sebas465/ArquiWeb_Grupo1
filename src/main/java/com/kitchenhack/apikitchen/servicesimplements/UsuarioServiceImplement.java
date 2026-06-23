@@ -13,56 +13,46 @@ import java.util.Optional;
 public class UsuarioServiceImplement implements IUsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioRepository uR;
+
 
     @Override
     public List<Usuario> list() {
-        return usuarioRepository.findAll();
+        return uR.findAll();
     }
 
     @Override
-    public Usuario insert(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
-
-    @Override
-    public void update(Usuario usuario) {
-        usuarioRepository.save(usuario);
-    }
-
-    @Override
-    public Optional<Usuario> listId(Long id) {
-        return usuarioRepository.findById(id);
-    }
-
     public Optional<Usuario> listId(Integer id) {
-        return id == null ? Optional.empty() : usuarioRepository.findById(id.longValue());
+        return uR.findById(id);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        uR.deleteById(id);
     }
 
     @Override
     public Optional<Usuario> findByEmail(String email) {
-        return usuarioRepository.findByEmailJPQL(email);
-    }
-
-    @Override
-    public void delete(Long id) {
-        usuarioRepository.deleteById(id);
-    }
-
-    public void delete(Integer id) {
-        if (id != null) {
-            usuarioRepository.deleteById(id.longValue());
-        }
+        return uR.findByEmailJPQL(email);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return usuarioRepository.existsByEmail(email);
+        return uR.existsByEmail(email);
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return usuarioRepository.existsByUsername(username);
+        return uR.existsByUsername(username);
+    }
+
+    @Override
+    public Usuario insert(Usuario usuario) {
+        return uR.save(usuario);
+    }
+
+    @Override
+    public void update(Usuario usuario) {
+        uR.save(usuario);
     }
 }
-

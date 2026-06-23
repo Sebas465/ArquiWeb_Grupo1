@@ -53,7 +53,7 @@ public class PlanMaestroController {
 
         if (tipo != null) {
             // Filtrar por tipo si viene el query param
-            lista = planMaestroService.listByTipo(tipo);
+            lista = planMaestroService.findByTipoPlan(tipo);
             if (lista.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("No hay planes de ese tipo");

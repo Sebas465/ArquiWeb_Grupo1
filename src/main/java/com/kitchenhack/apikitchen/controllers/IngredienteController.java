@@ -53,7 +53,7 @@ public class IngredienteController {
 	@GetMapping("/search-advanced")
 	public ResponseEntity<List<IngredienteDTO>> buscarPorNombreYTipo(
 			@RequestParam(name = "nombre", required = true) String nombre,
-			@RequestParam(name = "tipo", required = false) Long tipo) {
+			@RequestParam(name = "tipo", required = false) Integer tipo) {
 		ModelMapper m = new ModelMapper();
 		List<Ingrediente> ingredientes = ingredienteService.searchByNombreAndTipo(nombre, tipo);
 		List<IngredienteDTO> listaIngredientes = ingredientes
@@ -63,7 +63,7 @@ public class IngredienteController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+	public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
 		ModelMapper m = new ModelMapper();
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
@@ -109,7 +109,7 @@ public class IngredienteController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody IngredienteDTO dto) {
+	public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody IngredienteDTO dto) {
 		Optional<Ingrediente> existente = ingredienteService.listId(id);
 		if (existente.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -127,7 +127,7 @@ public class IngredienteController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> eliminar(@PathVariable Long id) {
+	public ResponseEntity<?> eliminar(@PathVariable Integer id) {
 		Optional<Ingrediente> ingrediente = ingredienteService.listId(id);
 
 		if (ingrediente.isPresent()) {
@@ -139,5 +139,3 @@ public class IngredienteController {
 		}
 	}
 }
-
-

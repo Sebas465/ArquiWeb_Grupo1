@@ -31,12 +31,12 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public Optional<Ingrediente> listId(Long id) {
+    public Optional<Ingrediente> listId(Integer id) {
         return ingredienteRepository.findById(id);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         ingredienteRepository.deleteById(id);
     }
 
@@ -51,18 +51,17 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public List<Ingrediente> searchByNombreAndTipo(String nombre, Long tipoIngredienteId) {
+    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId) {
         return ingredienteRepository.searchByNombreAndTipo(nombre, tipoIngredienteId);
     }
 
     @Override
     public boolean existePorId(int id) {
-        return ingredienteRepository.existsById((long) id);
+        return ingredienteRepository.existsById(id);
     }
 
     @Override
     public Optional<Ingrediente> listarPorId(int id) {
-        return ingredienteRepository.findById((long) id);
+        return ingredienteRepository.findById(id);
     }
 }
-

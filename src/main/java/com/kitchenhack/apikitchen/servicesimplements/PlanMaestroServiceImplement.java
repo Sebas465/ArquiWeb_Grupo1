@@ -9,40 +9,39 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// Implementación del servicio de planes maestros — delega en el repositorio JPA
 @Service
 public class PlanMaestroServiceImplement implements IPlanMaestroService {
 
     @Autowired
-    private PlanMaestroRepository planMaestroRepository;
+    private PlanMaestroRepository pR;
 
     @Override
-    public List<PlanMaestro> list() {
-        return planMaestroRepository.findAll();
+    public PlanMaestro insert(PlanMaestro planMaestro) {
+        return pR.save(planMaestro);
     }
 
     @Override
-    public PlanMaestro insert(PlanMaestro plan) {
-        return planMaestroRepository.save(plan);
+    public List<PlanMaestro> list() {
+        return pR.findAll();
     }
 
     @Override
     public Optional<PlanMaestro> listId(Integer id) {
-        return planMaestroRepository.findById(id);
-    }
-
-    @Override
-    public void update(PlanMaestro plan) {
-        planMaestroRepository.save(plan);
+        return pR.findById(id);
     }
 
     @Override
     public void delete(Integer id) {
-        planMaestroRepository.deleteById(id);
+        pR.deleteById(id);
     }
 
     @Override
-    public List<PlanMaestro> listByTipo(String tipoPlan) {
-        return planMaestroRepository.findByTipoPlan(tipoPlan);
+    public List<PlanMaestro> findByTipoPlan(String tipoPlan) {
+        return pR.findByTipoPlan(tipoPlan);
+    }
+
+    @Override
+    public void update(PlanMaestro planMaestro) {
+        pR.save(planMaestro);
     }
 }

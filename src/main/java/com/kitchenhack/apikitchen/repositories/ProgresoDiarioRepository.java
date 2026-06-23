@@ -8,7 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProgresoDiarioRepository extends JpaRepository<ProgresoDiario, Integer> {
-
-    // Busca el registro de progreso de una suscripción para un ítem específico del plan
-    Optional<ProgresoDiario> findByIdSuscripcion_IdAndIdDiaPlanItem_Id(Integer idSuscripcion, Integer idDiaPlanItem);
+    Optional<ProgresoDiario> findByIdSuscripcion_IdAndIdDiaPlanItem_Id(Integer id, Integer item_id);
 }

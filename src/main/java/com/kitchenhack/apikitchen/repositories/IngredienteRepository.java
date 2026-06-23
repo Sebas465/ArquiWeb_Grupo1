@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
+public interface IngredienteRepository extends JpaRepository<Ingrediente, Integer> {
 	List<Ingrediente> findByIdEtiqueta_Id(Integer idEtiquetaId);
 
 	@Query("SELECT i FROM Ingrediente i WHERE LOWER(i.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
@@ -16,6 +16,5 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
 
 	@Query("SELECT i FROM Ingrediente i WHERE LOWER(i.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) " +
 			"AND (:tipoIngredienteId IS NULL OR i.idEtiqueta.id = :tipoIngredienteId)")
-	List<Ingrediente> searchByNombreAndTipo(@Param("nombre") String nombre, @Param("tipoIngredienteId") Long tipoIngredienteId);
+	List<Ingrediente> searchByNombreAndTipo(@Param("nombre") String nombre, @Param("tipoIngredienteId") Integer tipoIngredienteId);
 }
-

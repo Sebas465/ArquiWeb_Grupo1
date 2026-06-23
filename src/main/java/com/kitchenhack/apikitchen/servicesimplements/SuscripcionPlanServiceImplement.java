@@ -27,12 +27,12 @@ public class SuscripcionPlanServiceImplement implements ISuscripcionPlanService 
     }
 
     @Override
-    public boolean existeSubscripcionActiva(Long usuarioId, Integer idPlan) {
+    public boolean existeSubscripcionActiva(Integer usuarioId, Integer idPlan) {
         return suscripcionPlanRepository.existsByIdUsuario_IdAndIdPlan_IdAndActivoTrue(usuarioId, idPlan);
     }
 
     @Override
-    public List<SuscripcionPlan> listActivasByUsuario(Long usuarioId) {
+    public List<SuscripcionPlan> listActivasByUsuario(Integer usuarioId) {
         return suscripcionPlanRepository.findByIdUsuario_IdAndActivoTrue(usuarioId);
     }
 }
