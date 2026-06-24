@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 // @Configuration
 // @EnableWebSecurity
-// Nota: esta clase queda deshabilitada porque la configuración central de seguridad
-// se encuentra en `WebSecurityConfig`. Se conserva el archivo por referencia pero
-// no se registra como configuración Spring para evitar beans duplicados.
 public class SecurityConfig {
 
     @Autowired

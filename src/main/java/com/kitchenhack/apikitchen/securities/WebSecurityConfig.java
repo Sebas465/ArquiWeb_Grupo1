@@ -3,6 +3,7 @@ package com.kitchenhack.apikitchen.securities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -58,11 +59,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // Configuración recomendada para API REST + JWT
         httpSecurity
+                .cors(Customizer.withDefaults()) //CORS
                 .csrf(AbstractHttpConfigurer::disable)
                 // No crear/usar sesión en servidor: cada petición se autentica por token
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Liberar la petición de pre-vuelo de Angular
                         .requestMatchers("/login", "/usuarios/nuevo", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // Resto requiere autenticación
                         .anyRequest().authenticated()
