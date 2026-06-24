@@ -12,9 +12,9 @@ import java.util.List;
 public interface SuscripcionPlanRepository extends JpaRepository<SuscripcionPlan, Integer> {
 
     // Verifica si el usuario ya tiene una suscripción activa al plan indicado
-    boolean existsByIdUsuario_IdAndIdPlan_IdAndActivoTrue(Long usuarioId, Integer idPlan);
+    boolean existsByIdUsuario_IdAndIdPlan_IdAndActivoTrue(Integer usuarioId, Integer idPlan);
 
     // US-P4-S2-04 — JPQL: lista suscripciones activas de un usuario
     @Query("SELECT s FROM SuscripcionPlan s WHERE s.idUsuario.id = :usuarioId AND s.activo = true")
-    List<SuscripcionPlan> findByIdUsuario_IdAndActivoTrue(@Param("usuarioId") Long usuarioId);
+    List<SuscripcionPlan> findByIdUsuario_IdAndActivoTrue(@Param("usuarioId") Integer usuarioId);
 }

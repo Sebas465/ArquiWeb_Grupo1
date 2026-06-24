@@ -125,7 +125,7 @@ public class ProgresoSaludController {
     // GET /progreso-salud/usuario/{id}?inicio=2026-01-01&fin=2026-04-30
     @GetMapping("/usuario/{id}")
     public ResponseEntity<?> listarPorUsuarioYRango(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
 
@@ -151,4 +151,3 @@ public class ProgresoSaludController {
         return dto;
     }
 }
-

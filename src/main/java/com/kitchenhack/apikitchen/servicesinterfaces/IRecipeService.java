@@ -18,11 +18,11 @@ public interface IRecipeService {
     void update(Recipe recipe);
 
     // Busca por id.
-    Optional<Recipe> listId(Long id);
+    Optional<Recipe> listId(Integer id);
 
 
     // Elimina por id.
-    void delete(Long id);
+    void delete(Integer id);
 
 
     // US-P2-08: Filtrar por dificultad
@@ -34,4 +34,3 @@ public interface IRecipeService {
     // US-P2-07
     RecetaDetalle registrarDetalle(RecetaDetalle detalle);
 }
-

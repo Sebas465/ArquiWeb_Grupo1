@@ -17,7 +17,7 @@ public class Interaccion {
 
     @ManyToOne
     @JoinColumn(name = "id_receta", nullable = false)
-    private Recipe idReceta;
+    private Recipe receta; // <-- Quitamos el "id"
 
     @Column(nullable = false, length = 20)
     private String tipo;
@@ -34,10 +34,10 @@ public class Interaccion {
     public Interaccion() {
     }
 
-    public Interaccion(Integer id, Usuario idUsuario, Recipe idReceta, String tipo, Integer calificacion, String comentario, LocalDateTime fecha) {
+    public Interaccion(Integer id, Usuario idUsuario, Recipe receta, String tipo, Integer calificacion, String comentario, LocalDateTime fecha) {
         this.id = id;
         this.idUsuario = idUsuario;
-        this.idReceta = idReceta;
+        this.receta = receta;
         this.tipo = tipo;
         this.calificacion = calificacion;
         this.comentario = comentario;
@@ -60,12 +60,12 @@ public class Interaccion {
         this.idUsuario = idUsuario;
     }
 
-    public Recipe getIdReceta() {
-        return idReceta;
+    public Recipe getReceta() {
+        return receta;
     }
 
-    public void setIdReceta(Recipe idReceta) {
-        this.idReceta = idReceta;
+    public void setreceta(Recipe receta) {
+        this.receta = receta;
     }
 
     public String getTipo() {

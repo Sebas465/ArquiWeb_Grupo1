@@ -12,8 +12,8 @@ public interface ISuscripcionPlanService {
 
     Optional<SuscripcionPlan> listId(Integer id);
 
-    boolean existeSubscripcionActiva(Long usuarioId, Integer idPlan);
+    boolean existeSubscripcionActiva(Integer usuarioId, Integer idPlan);
 
     // US-P4-S2-04 — Lista suscripciones activas de un usuario
-    List<SuscripcionPlan> listActivasByUsuario(Long usuarioId);
+    List<SuscripcionPlan> listActivasByUsuario(Integer usuarioId);
 }

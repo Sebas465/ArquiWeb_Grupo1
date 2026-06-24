@@ -68,7 +68,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorIdCompleto(@PathVariable Long id) {
+    public ResponseEntity<?> buscarPorIdCompleto(@PathVariable Integer id) {
         // 1. Buscamos la receta en la base de datos
         Optional<Recipe> opt = recipeService.listId(id);
 
@@ -154,7 +154,7 @@ public class RecipeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody RecipeDTO dto) {
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody RecipeDTO dto) {
         Optional<Recipe> existente = recipeService.listId(id);
 
         if (existente.isEmpty()) {
@@ -194,7 +194,7 @@ public class RecipeController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         Optional<Recipe> existente = recipeService.listId(id);
         if (existente.isPresent()) {
             recipeService.delete(id);
@@ -205,7 +205,7 @@ public class RecipeController {
     }
 
     @PostMapping("/{id}/detalle")
-    public ResponseEntity<?> agregarDetalle(@PathVariable Long id, @RequestBody RecetaDetalleDTO dto) {
+    public ResponseEntity<?> agregarDetalle(@PathVariable Integer id, @RequestBody RecetaDetalleDTO dto) {
         // 1. Validar que la receta padre existe
         Optional<Recipe> recetaOpt = recipeService.listId(id);
         if (recetaOpt.isEmpty()) {

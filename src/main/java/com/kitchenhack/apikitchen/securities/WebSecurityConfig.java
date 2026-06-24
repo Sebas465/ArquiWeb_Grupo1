@@ -3,7 +3,6 @@ package com.kitchenhack.apikitchen.securities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -55,21 +54,23 @@ public class WebSecurityConfig {
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // Configuración recomendada para API REST + JWT
-        httpSecurity
-                .cors(Customizer.withDefaults()) //CORS
+                httpSecurity.cors(Customizer.withDefaults()) // ¡Importante para que Spring Security integre CorsConfig!
                 .csrf(AbstractHttpConfigurer::disable)
-                // No crear/usar sesión en servidor: cada petición se autentica por token
+                .authorizeHttpRequests(req -> req
+                        // TODAS las rutas liberadas temporalmente para pruebas
+                        .anyRequest().permitAll()
+                )/*.csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Liberar la petición de pre-vuelo de Angular
                         .requestMatchers("/login", "/usuarios/nuevo", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // Resto requiere autenticación
                         .anyRequest().authenticated()
-                )
+                )*/
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint));
