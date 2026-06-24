@@ -42,8 +42,7 @@ public class ProgresoSaludServiceImplement implements IProgresoSaludService {
     }
 
     @Override
-    public List<ProgresoSalud> listByUsuarioAndRango(Long usuarioId, LocalDate inicio, LocalDate fin) {
+    public List<ProgresoSalud> listByUsuarioAndRango(Integer usuarioId, LocalDate inicio, LocalDate fin) {
         return progresoSaludRepository.findByIdUsuario_IdAndFechaBetween(usuarioId, inicio, fin);
     }
 }
-

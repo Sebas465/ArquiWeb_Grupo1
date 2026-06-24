@@ -1,16 +1,9 @@
 package com.kitchenhack.apikitchen.controllers;
 
-import com.kitchenhack.apikitchen.dtos.DiaPlanItemDTO;
 import com.kitchenhack.apikitchen.dtos.PlanMaestroDTO;
-import com.kitchenhack.apikitchen.entities.DiaPlanItem;
-import com.kitchenhack.apikitchen.entities.Ejercicio;
 import com.kitchenhack.apikitchen.entities.PlanMaestro;
-import com.kitchenhack.apikitchen.entities.Recipe;
 import com.kitchenhack.apikitchen.entities.Usuario;
-import com.kitchenhack.apikitchen.servicesinterfaces.IDiaPlanItemService;
-import com.kitchenhack.apikitchen.servicesinterfaces.IEjercicioService;
 import com.kitchenhack.apikitchen.servicesinterfaces.IPlanMaestroService;
-import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +29,6 @@ public class PlanMaestroController {
     @Autowired
     private IUsuarioService usuarioService;
 
-    @Autowired
-    private IDiaPlanItemService diaPlanItemService;
-
-    @Autowired
-    private IRecipeService recipeService;
-
-    @Autowired
-    private IEjercicioService ejercicioService;
-
     // US-P4-04 — Listar todos los planes maestros disponibles
     // US-P4-S2-05 — GET /planes?tipo=hibrido → filtra por tipo, o lista todos si no viene el param
     @GetMapping
@@ -53,7 +37,7 @@ public class PlanMaestroController {
 
         if (tipo != null) {
             // Filtrar por tipo si viene el query param
-            lista = planMaestroService.listByTipo(tipo);
+            lista = planMaestroService.findByTipoPlan(tipo);
             if (lista.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("No hay planes de ese tipo");
@@ -182,70 +166,6 @@ public class PlanMaestroController {
 
         planMaestroService.update(plan);
         return ResponseEntity.ok("Plan actualizado correctamente");
-    }
-
-    // US-P4-S2-01 — Agregar un ítem (receta o ejercicio) a un día del plan
-    // POST /planes/{id}/items → 201 con ítem creado, 400 si faltan ambos ids, 404 si no existen
-    @PostMapping("/{id}/items")
-    public ResponseEntity<?> agregarItem(@PathVariable Integer id, @RequestBody DiaPlanItemDTO dto) {
-
-        // Verificar que el plan exista
-        Optional<PlanMaestro> planOpt = planMaestroService.listId(id);
-        if (planOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plan no encontrado");
-        }
-
-        // La CONSTRAINT de BD exige que haya receta O ejercicio — validar antes de persistir
-        if (dto.getIdReceta() == null && dto.getIdEjercicio() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Debe indicar una receta o un ejercicio");
-        }
-
-        Recipe receta = null;
-        Ejercicio ejercicio = null;
-
-        // Si viene idReceta, verificar que exista en la BD
-        if (dto.getIdReceta() != null) {
-            Optional<Recipe> recetaOpt = recipeService.listId(dto.getIdReceta());
-            if (recetaOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
-            }
-            receta = recetaOpt.get();
-        }
-
-        // Si viene idEjercicio, verificar que exista en la BD
-        if (dto.getIdEjercicio() != null) {
-            Optional<Ejercicio> ejercicioOpt = ejercicioService.listId(dto.getIdEjercicio());
-            if (ejercicioOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ejercicio no encontrado");
-            }
-            ejercicio = ejercicioOpt.get();
-        }
-
-        // Construir la entidad con las relaciones ya validadas
-        DiaPlanItem item = new DiaPlanItem(
-                null,
-                planOpt.get(),
-                dto.getNumDia(),
-                receta,
-                ejercicio,
-                dto.getMomento(),
-                dto.getOrden()
-        );
-
-        DiaPlanItem guardado = diaPlanItemService.insert(item);
-
-        // Construir DTO de respuesta extrayendo solo los IDs de las relaciones
-        DiaPlanItemDTO respuesta = new DiaPlanItemDTO();
-        respuesta.setId(guardado.getId());
-        respuesta.setIdPlan(guardado.getIdPlan().getId());
-        respuesta.setNumDia(guardado.getNumDia());
-        respuesta.setIdReceta(guardado.getIdReceta() != null ? guardado.getIdReceta().getId() : null);
-        respuesta.setIdEjercicio(guardado.getIdEjercicio() != null ? guardado.getIdEjercicio().getId() : null);
-        respuesta.setMomento(guardado.getMomento());
-        respuesta.setOrden(guardado.getOrden());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
     // US-P4-05 — Eliminar un plan maestro por ID

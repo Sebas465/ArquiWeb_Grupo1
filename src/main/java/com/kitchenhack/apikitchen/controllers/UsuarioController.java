@@ -39,7 +39,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         ModelMapper m = new ModelMapper();
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
@@ -100,7 +100,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody UsuarioDTO dto) {
         java.util.Optional<Usuario> existente = usuarioService.listId(id);
         if (existente.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -129,7 +129,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         java.util.Optional<Usuario> usuario = usuarioService.listId(id);
 
         if (usuario.isPresent()) {
@@ -142,4 +142,3 @@ public class UsuarioController {
     }
 
 }
-

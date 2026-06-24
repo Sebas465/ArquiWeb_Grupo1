@@ -5,7 +5,7 @@ public class PlanMaestroDTO {
 
     private Integer id;
     private String titulo;
-    private Long idAutor;   // ID del usuario autor, no el objeto completo
+    private Integer idAutor;   // ID del usuario autor, no el objeto completo
     private String tipoPlan;   // Valores válidos: 'alimenticio', 'ejercicio', 'hibrido'
     private Integer duracionDias;
     private String objetivo;
@@ -26,11 +26,11 @@ public class PlanMaestroDTO {
         this.titulo = titulo;
     }
 
-    public Long getIdAutor() {
+    public Integer getIdAutor() {
         return idAutor;
     }
 
-    public void setIdAutor(Long idAutor) {
+    public void setIdAutor(Integer idAutor) {
         this.idAutor = idAutor;
     }
 

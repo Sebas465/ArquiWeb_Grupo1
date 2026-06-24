@@ -6,7 +6,7 @@ public class RecipeDTO {
     private String title;
     private String description;
     private String difficulty;
-    private Long idAutor;
+    private Integer idAutor;
 
     public String getTitle() {
         return title;
@@ -32,12 +32,11 @@ public class RecipeDTO {
         this.difficulty = difficulty;
     }
 
-    public Long getIdAutor() {
+    public Integer getIdAutor() {
         return idAutor;
     }
 
-    public void setIdAutor(Long idAutor) {
+    public void setIdAutor(Integer idAutor) {
         this.idAutor = idAutor;
     }
 }
-

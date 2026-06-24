@@ -17,10 +17,10 @@ public interface IIngredienteService {
     void update(Ingrediente ingrediente);
 
     // Busca un ingrediente por su identificador.
-    Optional<Ingrediente> listId(Long id);
+    Optional<Ingrediente> listId(Integer id);
 
     // Elimina un ingrediente por su identificador.
-    void delete(Long id);
+    void delete(Integer id);
 
     // Lista ingredientes por tipo (filtro opcional en GET /ingredientes?tipo=1)
     List<Ingrediente> findByTipo(Integer tipoIngredienteId);
@@ -29,7 +29,7 @@ public interface IIngredienteService {
     List<Ingrediente> searchByNombre(String nombre);
 
     // Busca ingredientes por nombre y tipo simultáneamente
-    List<Ingrediente> searchByNombreAndTipo(String nombre, Long tipoIngredienteId);
+    List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId);
 
     // US-P2-07
     boolean existePorId(int id);
