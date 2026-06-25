@@ -1,12 +1,26 @@
 package com.kitchenhack.apikitchen.dtos;
 
 
+import java.time.LocalDateTime;
+
 public class RecipeDTO {
 
+    private Integer id;
     private String title;
     private String description;
     private String difficulty;
     private Integer idAutor;
+    private Integer prepTimeMinutes;
+    private Boolean published;
+    private LocalDateTime ultimaActualizacion;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -38,5 +52,29 @@ public class RecipeDTO {
 
     public void setIdAutor(Integer idAutor) {
         this.idAutor = idAutor;
+    }
+
+    public Integer getPrepTimeMinutes() {
+        return prepTimeMinutes;
+    }
+
+    public void setPrepTimeMinutes(Integer prepTimeMinutes) {
+        this.prepTimeMinutes = prepTimeMinutes;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
+
+    public LocalDateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
+    }
+
+    public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 }
