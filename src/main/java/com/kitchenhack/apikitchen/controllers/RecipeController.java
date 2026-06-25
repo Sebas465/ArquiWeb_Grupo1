@@ -33,11 +33,10 @@ public class RecipeController {
     @Autowired
     private IIngredienteService ingredienteService;
 
-
     // 1. Endpoint para ListarTodo
     @GetMapping
     public ResponseEntity<?> listar() {
-        List<Recipe> recetas = recipeService.findByPublishedTrue();
+        List<Recipe> recetas = recipeService.list();
 
         if (recetas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -48,7 +47,6 @@ public class RecipeController {
     }
 
     // 2. Endpoint específico para Filtrar
-    // Ruta en Postman: GET /api/recipes/buscar?dificultad=facil
     @GetMapping("/buscar")
     public ResponseEntity<?> filtrarPorDificultad(@RequestParam(name = "dificultad") String dificultad) {
         List<Recipe> recetas = recipeService.findByDifficulty(dificultad);
@@ -60,6 +58,7 @@ public class RecipeController {
 
         return ResponseEntity.ok(convertirAListaDto(recetas));
     }
+
     private List<RecipeDTO> convertirAListaDto(List<Recipe> lista) {
         ModelMapper m = new ModelMapper();
         return lista.stream()
@@ -69,43 +68,13 @@ public class RecipeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorIdCompleto(@PathVariable Integer id) {
-        // 1. Buscamos la receta en la base de datos
         Optional<Recipe> opt = recipeService.listId(id);
 
         if (opt.isPresent()) {
-            Recipe receta = opt.get();
-
-            // 2. Preparamos el DTO de respuesta detallada
-            RecipeFDDTO response = new RecipeFDDTO();
-            response.setTitle(receta.getTitle());
-            response.setDifficulty(receta.getDifficulty());
-
-            // 3. Procesamos los detalles (tabla receta_detalle + ingrediente)
-            List<RecipeItemDTO> items = receta.getDetalles().stream()
-                    // Criterio BDD: Ordenados por el campo 'orden'
-                    .sorted(Comparator.comparing(det -> det.getOrden() != null ? det.getOrden() : 0))
-                    .map(det -> {
-                        RecipeItemDTO item = new RecipeItemDTO();
-                        item.setOrden(det.getOrden());
-                        item.setEsPaso(det.getEsPaso());
-                        item.setContenido(det.getContenido());
-                        item.setCantidad(det.getCantidad());
-
-                        // Si el detalle tiene un ingrediente, extraemos su nombre y unidad
-                        if (det.getIdIngrediente() != null) {
-                            item.setNombreIngrediente(det.getIdIngrediente().getNombre());
-                            item.setUnidadMedida(det.getIdIngrediente().getUnidadMedida());
-                        }
-                        return item;
-                    })
-                    .collect(Collectors.toList());
-
-            response.setItems(items);
-
-            // 4. Retornamos 200 + Receta con ingredientes y pasos ordenados
-            return ResponseEntity.ok(response);
+            ModelMapper m = new ModelMapper();
+            RecipeDTO dto = m.map(opt.get(), RecipeDTO.class);
+            return ResponseEntity.ok(dto);
         } else {
-            // 5. Criterio BDD: Si no existe, retorna 404 con mensaje específico
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Receta no encontrada");
         }
@@ -113,21 +82,22 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody RecipeDTO dto) {
-        if (dto.getDifficulty() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
-        }
-
-        String diff = dto.getDifficulty().toLowerCase().trim();
-        if (!diff.equals("facil") && !diff.equals("medio") && !diff.equals("dificil")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
-        }
-
         ModelMapper m = new ModelMapper();
         try {
             Recipe recipe = m.map(dto, Recipe.class);
 
             recipe.setId(null);
             recipe.setUltimaActualizacion(java.time.LocalDateTime.now());
+
+            if (dto.getDifficulty() != null) {
+                recipe.setDifficulty(dto.getDifficulty());
+            }
+            if (dto.getPrepTimeMinutes() != null) {
+                recipe.setPrepTimeMinutes(dto.getPrepTimeMinutes());
+            }
+            if (dto.getPublished() != null) {
+                recipe.setPublished(dto.getPublished());
+            }
 
             if (dto.getIdAutor() != null) {
                 Usuario autor = new Usuario();
@@ -165,15 +135,11 @@ public class RecipeController {
 
         if (dto.getTitle() != null) r.setTitle(dto.getTitle());
         if (dto.getDescription() != null) r.setDescription(dto.getDescription());
+        if (dto.getPrepTimeMinutes() != null) r.setPrepTimeMinutes(dto.getPrepTimeMinutes());
+        if (dto.getPublished() != null) r.setPublished(dto.getPublished());
 
-        if (dto.getDifficulty() != null) {
-            String diff = dto.getDifficulty().toLowerCase().trim();
-            if (diff.equals("facil") || diff.equals("medio") || diff.equals("dificil")) {
-                r.setDifficulty(diff);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dificultad inválida");
-            }
-        }
+        // Asignación limpia sin validación estricta de minúsculas
+        if (dto.getDifficulty() != null) r.setDifficulty(dto.getDifficulty());
 
         if (dto.getIdAutor() != null) {
             Usuario nuevoAutor = new Usuario();
@@ -192,7 +158,6 @@ public class RecipeController {
         }
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         Optional<Recipe> existente = recipeService.listId(id);
@@ -206,7 +171,6 @@ public class RecipeController {
 
     @PostMapping("/{id}/detalle")
     public ResponseEntity<?> agregarDetalle(@PathVariable Integer id, @RequestBody RecetaDetalleDTO dto) {
-        // 1. Validar que la receta padre existe
         Optional<Recipe> recetaOpt = recipeService.listId(id);
         if (recetaOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
@@ -217,24 +181,16 @@ public class RecipeController {
         nuevoDetalle.setEsPaso(dto.getEsPaso());
         nuevoDetalle.setOrden(dto.getOrden());
 
-        // --- VALIDACIONES SEGÚN LA IMAGEN ---
-
         if (Boolean.FALSE.equals(dto.getEsPaso())) {
-            // CASO: es_paso=FALSE (Ingrediente)
-
-            // Error: Falta id_ingrediente (o es 0)
             if (dto.getIdIngrediente() == null || dto.getIdIngrediente() == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("id_ingrediente es obligatorio para ingredientes");
             }
-
-            // Error: Falta cantidad
             if (dto.getCantidad() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("La cantidad es obligatoria para ingredientes");
             }
 
-            // Validar que el ingrediente exista en la BD (Evita el 500)
             Optional<Ingrediente> ingOpt = ingredienteService.listarPorId(dto.getIdIngrediente());
             if (ingOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -243,23 +199,19 @@ public class RecipeController {
 
             nuevoDetalle.setIdIngrediente(ingOpt.get());
             nuevoDetalle.setCantidad(toBigDecimal(dto.getCantidad()));
-            nuevoDetalle.setContenido(null); // Limpieza
+            nuevoDetalle.setContenido(null);
 
         } else {
-            // CASO: es_paso=TRUE (Paso de preparación)
-
-            // Error: Falta contenido
             if (dto.getContenido() == null || dto.getContenido().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("El contenido es obligatorio para pasos de preparación");
             }
 
             nuevoDetalle.setContenido(dto.getContenido());
-            nuevoDetalle.setIdIngrediente(null); // Limpieza
+            nuevoDetalle.setIdIngrediente(null);
             nuevoDetalle.setCantidad(null);
         }
 
-        // Guardar y retornar 201
         RecetaDetalle guardado = recipeService.registrarDetalle(nuevoDetalle);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
@@ -267,5 +219,4 @@ public class RecipeController {
     private BigDecimal toBigDecimal(Double value) {
         return value == null ? null : BigDecimal.valueOf(value);
     }
-
 }
