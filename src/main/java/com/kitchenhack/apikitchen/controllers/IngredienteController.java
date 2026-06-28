@@ -116,10 +116,15 @@ public class IngredienteController {
 					.body("Ingrediente no encontrado");
 		}
 
-		// Reutilizar la entidad encontrada y modificar solo los campos permitidos.
 		Ingrediente ingrediente = existente.get();
+		// Ahora sí actualizamos TODO
 		ingrediente.setNombre(dto.getNombre());
+		ingrediente.setUnidadMedida(dto.getUnidadMedida());
 		ingrediente.setIdEtiqueta(dto.getIdEtiqueta());
+		ingrediente.setCalorias100(dto.getCalorias100());
+		ingrediente.setProteinas100(dto.getProteinas100());
+		ingrediente.setCarbos100(dto.getCarbos100());
+		ingrediente.setGrasas100(dto.getGrasas100());
 
 		ingredienteService.update(ingrediente);
 
