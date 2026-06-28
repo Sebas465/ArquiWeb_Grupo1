@@ -62,7 +62,19 @@ public class RecipeController {
     private List<RecipeDTO> convertirAListaDto(List<Recipe> lista) {
         ModelMapper m = new ModelMapper();
         return lista.stream()
-                .map(r -> m.map(r, RecipeDTO.class))
+                .map(r -> {
+                    // 1. Mapeamos los datos básicos que ModelMapper reconoce automáticamente
+                    RecipeDTO dto = m.map(r, RecipeDTO.class);
+
+                    // 2. Extraemos manualmente el nombre del autor si es que existe
+                    if (r.getIdAutor() != null) {
+                        dto.setNombreAutor(r.getIdAutor().getUsername());
+                        // Si prefieres mostrar el nombre y apellido en lugar del username,
+                        // cámbialo a: r.getIdAutor().getNombre() + " " + r.getIdAutor().getApellido()
+                    }
+
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -71,12 +83,40 @@ public class RecipeController {
         Optional<Recipe> opt = recipeService.listId(id);
 
         if (opt.isPresent()) {
+            Recipe receta = opt.get();
             ModelMapper m = new ModelMapper();
-            RecipeDTO dto = m.map(opt.get(), RecipeDTO.class);
+
+            // 1. Mapeamos la receta básica
+            RecipeDTO dto = m.map(receta, RecipeDTO.class);
+            if (receta.getIdAutor() != null) {
+                dto.setNombreAutor(receta.getIdAutor().getUsername());
+            }
+
+            // 2. Extraemos los detalles manualmente para la pantalla de gestionar
+            List<RecipeItemDTO> items = receta.getDetalles().stream()
+                    .sorted(Comparator.comparing(det -> det.getOrden() != null ? det.getOrden() : 0))
+                    .map(det -> {
+                        RecipeItemDTO item = new RecipeItemDTO();
+                        item.setId(det.getId()); // 🔥 Necesario para poder eliminar
+                        item.setOrden(det.getOrden());
+                        item.setEsPaso(det.getEsPaso());
+                        item.setContenido(det.getContenido());
+                        item.setCantidad(det.getCantidad());
+
+                        if (det.getIdIngrediente() != null) {
+                            item.setNombreIngrediente(det.getIdIngrediente().getNombre());
+                            item.setUnidadMedida(det.getIdIngrediente().getUnidadMedida());
+                        }
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+
+            // 3. Adjuntamos la lista al DTO
+            dto.setItems(items);
+
             return ResponseEntity.ok(dto);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Receta no encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Receta no encontrada");
         }
     }
 
@@ -214,6 +254,27 @@ public class RecipeController {
 
         RecetaDetalle guardado = recipeService.registrarDetalle(nuevoDetalle);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
+    }
+
+    @DeleteMapping("/detalle/{detalleId}")
+    public ResponseEntity<?> eliminarDetalle(@PathVariable Integer detalleId) {
+        try {
+            recipeService.deleteDetalle(detalleId);
+            return ResponseEntity.ok("Detalle eliminado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el detalle: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/detalle/{id}/orden/{nuevoOrden}")
+    public ResponseEntity<?> cambiarOrden(@PathVariable Integer id, @PathVariable Integer nuevoOrden) {
+        try {
+            recipeService.actualizarOrdenDetalle(id, nuevoOrden);
+            return ResponseEntity.ok("Orden actualizado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar orden");
+        }
     }
 
     private BigDecimal toBigDecimal(Double value) {

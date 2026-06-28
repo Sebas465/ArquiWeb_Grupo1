@@ -33,4 +33,8 @@ public interface IRecipeService {
 
     // US-P2-07
     RecetaDetalle registrarDetalle(RecetaDetalle detalle);
+
+    void deleteDetalle(Integer detalleId);
+
+    void actualizarOrdenDetalle(Integer id, Integer nuevoOrden);
 }

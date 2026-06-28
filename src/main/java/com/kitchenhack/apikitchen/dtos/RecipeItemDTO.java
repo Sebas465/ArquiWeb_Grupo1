@@ -1,12 +1,21 @@
 package com.kitchenhack.apikitchen.dtos;
 
 public class RecipeItemDTO {
+    private Integer id;
     private Integer orden;
     private Boolean esPaso;
     private String contenido;
     private Double cantidad;
     private String nombreIngrediente;
     private String unidadMedida;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getOrden() {
         return orden;

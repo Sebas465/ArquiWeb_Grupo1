@@ -64,4 +64,19 @@ public class RecipeServiceImplement implements IRecipeService {
         return recetaDetalleRepository.save(detalle);
     }
 
+    @Override
+    public void deleteDetalle(Integer detalleId) {
+        if (detalleId != null) {
+            recetaDetalleRepository.deleteById(detalleId);
+        }
+    }
+
+    @Override
+    public void actualizarOrdenDetalle(Integer id, Integer nuevoOrden) {
+        recetaDetalleRepository.findById(id).ifPresent(det -> {
+            det.setOrden(nuevoOrden);
+            recetaDetalleRepository.save(det);
+        });
+    }
+
 }

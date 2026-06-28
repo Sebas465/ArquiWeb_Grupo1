@@ -2,6 +2,7 @@ package com.kitchenhack.apikitchen.dtos;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class RecipeDTO {
 
@@ -13,6 +14,25 @@ public class RecipeDTO {
     private Integer prepTimeMinutes;
     private Boolean published;
     private LocalDateTime ultimaActualizacion;
+
+    private String nombreAutor;
+    private List<RecipeItemDTO> items;
+
+    public List<RecipeItemDTO> getItems() {
+        return items;
+    }
+
+    public void setItems(List<RecipeItemDTO> items) {
+        this.items = items;
+    }
+
+    public String getNombreAutor() {
+        return nombreAutor;
+    }
+
+    public void setNombreAutor(String nombreAutor) {
+        this.nombreAutor = nombreAutor;
+    }
 
     public Integer getId() {
         return id;
