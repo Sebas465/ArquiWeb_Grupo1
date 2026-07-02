@@ -20,16 +20,8 @@ public interface IRecipeService {
     // Busca por id.
     Optional<Recipe> listId(Integer id);
 
-
     // Elimina por id.
     void delete(Integer id);
-
-
-    // US-P2-08: Filtrar por dificultad
-    List<Recipe> findByDifficulty(String difficulty);
-
-    // US-P2-04: (Opcional pero recomendado) Listar solo publicadas
-    List<Recipe> findByPublishedTrue();
 
     // US-P2-07
     RecetaDetalle registrarDetalle(RecetaDetalle detalle);
@@ -37,4 +29,11 @@ public interface IRecipeService {
     void deleteDetalle(Integer detalleId);
 
     void actualizarOrdenDetalle(Integer id, Integer nuevoOrden);
+
+    // 1. Estadísticas de recetas por dificultad
+    List<Object[]> getRecipeStatsByDifficulty();
+
+    // En la interfaz:
+    List<Object[]> reportTopIngredients();
+
 }

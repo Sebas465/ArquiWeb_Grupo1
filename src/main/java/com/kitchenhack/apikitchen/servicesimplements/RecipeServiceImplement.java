@@ -50,16 +50,6 @@ public class RecipeServiceImplement implements IRecipeService {
     }
 
     @Override
-    public List<Recipe> findByDifficulty(String difficulty) {
-        return recipeRepository.findByDifficulty(difficulty);
-    }
-
-    @Override
-    public List<Recipe> findByPublishedTrue() {
-        return recipeRepository.findByPublishedTrue();
-    }
-
-    @Override
     public RecetaDetalle registrarDetalle(RecetaDetalle detalle) {
         return recetaDetalleRepository.save(detalle);
     }
@@ -77,6 +67,18 @@ public class RecipeServiceImplement implements IRecipeService {
             det.setOrden(nuevoOrden);
             recetaDetalleRepository.save(det);
         });
+    }
+
+    @Override
+    public List<Object[]> getRecipeStatsByDifficulty() {
+        // Llama a la query que pusiste en IRecipeRepository
+        return recipeRepository.getRecipeStatsByDifficulty();
+    }
+
+    // En la implementación:
+    @Override
+    public List<Object[]> reportTopIngredients() {
+        return recetaDetalleRepository.topMostUsedIngredients();
     }
 
 }

@@ -35,7 +35,7 @@ public class Recipe {
     private LocalDateTime ultimaActualizacion;
 
     //Sirve para RecipeController
-    @OneToMany(mappedBy = "idReceta") // 'idReceta' es el nombre del campo en RecetaDetalle
+    @OneToMany(mappedBy = "idReceta", cascade = CascadeType.ALL, orphanRemoval = true) // 'idReceta' es el nombre del campo en RecetaDetalle
     private List<RecetaDetalle> detalles;
 
     public List<RecetaDetalle> getDetalles() {

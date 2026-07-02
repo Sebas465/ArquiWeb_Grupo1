@@ -2,8 +2,8 @@ package com.kitchenhack.apikitchen.controllers;
 
 import com.kitchenhack.apikitchen.dtos.RecetaDetalleDTO;
 import com.kitchenhack.apikitchen.dtos.RecipeDTO;
-import com.kitchenhack.apikitchen.dtos.RecipeFDDTO;
 import com.kitchenhack.apikitchen.dtos.RecipeItemDTO;
+import com.kitchenhack.apikitchen.dtos.RecipeStatsDTO;
 import com.kitchenhack.apikitchen.entities.Ingrediente;
 import com.kitchenhack.apikitchen.entities.RecetaDetalle;
 import com.kitchenhack.apikitchen.entities.Recipe;
@@ -46,17 +46,26 @@ public class RecipeController {
         return ResponseEntity.ok(convertirAListaDto(recetas));
     }
 
-    // 2. Endpoint específico para Filtrar
-    @GetMapping("/buscar")
-    public ResponseEntity<?> filtrarPorDificultad(@RequestParam(name = "dificultad") String dificultad) {
-        List<Recipe> recetas = recipeService.findByDifficulty(dificultad);
 
-        if (recetas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No hay recetas con esa dificultad");
+    @GetMapping("/estadisticas-dificultad")
+    public ResponseEntity<?> obtenerEstadisticasDificultad() {
+        List<Object[]> lista = recipeService.getRecipeStatsByDifficulty();
+
+        if(lista.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay datos suficientes");
         }
 
-        return ResponseEntity.ok(convertirAListaDto(recetas));
+        List<RecipeStatsDTO> respuesta = new java.util.ArrayList<>();
+        for(Object[] fila : lista){
+            RecipeStatsDTO dto = new RecipeStatsDTO();
+            dto.setDificultad(fila[0] != null ? (String)fila[0] : "No definida");
+            dto.setTotalRecetas(((Number)fila[1]).intValue());
+            // Manejo seguro del promedio (que puede venir como Double)
+            dto.setTiempoPromedio(fila[2] != null ? ((Number)fila[2]).doubleValue() : 0.0);
+
+            respuesta.add(dto);
+        }
+        return ResponseEntity.ok(respuesta);
     }
 
     private List<RecipeDTO> convertirAListaDto(List<Recipe> lista) {

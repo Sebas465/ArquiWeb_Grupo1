@@ -1,8 +1,10 @@
 package com.kitchenhack.apikitchen.controllers;
 
 import com.kitchenhack.apikitchen.dtos.IngredienteDTO;
+import com.kitchenhack.apikitchen.dtos.IngredienteUsageReportDTO;
 import com.kitchenhack.apikitchen.entities.Ingrediente;
 import com.kitchenhack.apikitchen.servicesinterfaces.IIngredienteService;
+import com.kitchenhack.apikitchen.servicesinterfaces.IRecipeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class IngredienteController {
 
 	@Autowired
 	private IIngredienteService ingredienteService;
+
+    @Autowired
+    private IRecipeService recipeService;
 
 	@GetMapping
 	public ResponseEntity<?> listar(@RequestParam(name = "idEtiqueta", required = false) Integer idEtiqueta) {
@@ -143,4 +148,22 @@ public class IngredienteController {
 					.body("Ingrediente no encontrado");
 		}
 	}
+
+    @GetMapping("/reporte-ingredientes-top")
+    public ResponseEntity<?> reporteIngredientesTop() {
+        List<Object[]> lista = recipeService.reportTopIngredients();
+
+        if(lista.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay ingredientes en uso actualmente");
+        }
+
+        List<IngredienteUsageReportDTO> respuesta = new java.util.ArrayList<>();
+        for(Object[] fila : lista){
+            IngredienteUsageReportDTO dto = new IngredienteUsageReportDTO();
+            dto.setNombreIngrediente((String)fila[0]);
+            dto.setVecesUsado(((Number)fila[1]).intValue());
+            respuesta.add(dto);
+        }
+        return ResponseEntity.ok(respuesta);
+    }
 }
