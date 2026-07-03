@@ -46,16 +46,6 @@ public class IngredienteServiceImplement implements IIngredienteService {
     }
 
     @Override
-    public List<Ingrediente> searchByNombre(String nombre) {
-        return ingredienteRepository.searchByNombre(nombre);
-    }
-
-    @Override
-    public List<Ingrediente> searchByNombreAndTipo(String nombre, Integer tipoIngredienteId) {
-        return ingredienteRepository.searchByNombreAndTipo(nombre, tipoIngredienteId);
-    }
-
-    @Override
     public boolean existePorId(int id) {
         return ingredienteRepository.existsById(id);
     }
