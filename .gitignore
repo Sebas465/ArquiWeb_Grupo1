@@ -31,3 +31,36 @@ build/
 
 ### VS Code ###
 .vscode/
+ejercicios-lista.png
+ejercicios-nuevo.png
+home.png
+login.png
+navbar-app-dropdown.png
+registro.png
+planes-lista.png
+.gitignore
+.playwright-mcp/console-2026-06-24T13-08-44-557Z.log
+.playwright-mcp/console-2026-06-24T13-08-56-261Z.log
+.playwright-mcp/console-2026-06-24T13-09-03-713Z.log
+.playwright-mcp/console-2026-06-24T13-09-14-216Z.log
+.playwright-mcp/console-2026-06-24T13-10-13-173Z.log
+.playwright-mcp/console-2026-06-24T13-10-28-502Z.log
+.playwright-mcp/console-2026-06-24T13-11-03-331Z.log
+.playwright-mcp/console-2026-06-24T13-11-14-056Z.log
+.playwright-mcp/page-2026-06-24T13-08-44-971Z.yml
+.playwright-mcp/page-2026-06-24T13-08-56-391Z.yml
+.playwright-mcp/page-2026-06-24T13-09-03-812Z.yml
+.playwright-mcp/page-2026-06-24T13-09-14-319Z.yml
+.playwright-mcp/page-2026-06-24T13-09-21-135Z.yml
+.gitignore
+.playwright-mcp/page-2026-06-24T13-09-31-593Z.yml
+.playwright-mcp/page-2026-06-24T13-10-13-308Z.yml
+.playwright-mcp/page-2026-06-24T13-10-28-610Z.yml
+.gitignore
+.playwright-mcp/page-2026-06-24T13-11-03-437Z.yml
+.playwright-mcp/page-2026-06-24T13-11-14-190Z.yml
+.gitignore
+src/main/resources/application.properties
+src/main/resources/application.properties
+src/main/resources/application.properties
+src/main/resources/application.properties
