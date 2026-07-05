@@ -6,6 +6,7 @@ import com.kitchenhack.apikitchen.servicesinterfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,5 +33,10 @@ public class UsuarioServiceImplement implements IUsuarioService {
     @Override
     public Usuario insert(Usuario usuario) {
         return uR.save(usuario);
+    }
+
+    @Override
+    public List<Usuario> list() {
+        return uR.findAll();
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -49,6 +51,24 @@ public class UsuarioController {
         // No exponer contrasenaHash en la respuesta
         responseDTO.setContrasenaHash(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> listar() {
+        List<Usuario> usuarios = usuarioService.list();
+
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay usuarios registrados");
+        }
+
+        ModelMapper m = new ModelMapper();
+        List<UsuarioDTO> listaUsuarios = usuarios.stream().map(u -> {
+            UsuarioDTO dto = m.map(u, UsuarioDTO.class);
+            dto.setContrasenaHash(null); // Seguridad: Limpiamos la contraseña antes de enviarla
+            return dto;
+        }).collect(java.util.stream.Collectors.toList());
+
+        return ResponseEntity.ok(listaUsuarios);
     }
 
 }
