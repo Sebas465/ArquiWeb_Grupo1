@@ -1,6 +1,5 @@
 package com.kitchenhack.apikitchen.servicesinterfaces;
 
-import com.kitchenhack.apikitchen.entities.Ejercicio;
 import com.kitchenhack.apikitchen.entities.Usuario;
 
 import java.util.List;
@@ -11,5 +10,7 @@ public interface IUsuarioService {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
     Usuario insert(Usuario usuario);
+    void update(Usuario usuario);
+    void delete(Integer id);
     List<Usuario> list();
 }

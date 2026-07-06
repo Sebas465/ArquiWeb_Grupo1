@@ -60,17 +60,23 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // Configuración recomendada para API REST + JWT
-                httpSecurity.cors(Customizer.withDefaults()) // ¡Importante para que Spring Security integre CorsConfig!
+        httpSecurity.cors(Customizer.withDefaults()) // ¡Importante para que Spring Security integre CorsConfig!
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req
-                        // TODAS las rutas liberadas temporalmente para pruebas
-                        .anyRequest().permitAll()
-                )/*.csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/usuarios/nuevo", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // P1 — Gestión (solo admin)
+                        .requestMatchers("/roles/**", "/usuarios/**").hasAuthority("admin")
+                        // P2 — Recetas: catálogo (nutricionista arma el contenido, admin todo)
+                        .requestMatchers("/etiquetas/**", "/ingredientes/**").hasAnyAuthority("nutricionista", "admin")
+                        // P4 — Planes maestros: alimenticios (nutricionista) y de ejercicio (entrenador)
+                        .requestMatchers("/planes/**").hasAnyAuthority("nutricionista", "entrenador", "admin")
+                        // /api/recipes/** y /ejercicios/** solo exigen estar logueado aquí:
+                        // el detalle de lectura vs. escritura lo resuelve @PreAuthorize en cada método
+                        // (RecipeController y EjercicioController), porque dentro del mismo módulo
+                        // "ver" y "crear/editar/borrar" tienen roles distintos.
                         .anyRequest().authenticated()
-                )*/
+                )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint));

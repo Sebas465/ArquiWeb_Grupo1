@@ -9,6 +9,7 @@ public class UsuarioDTO {
     private String email;
     private String contrasenaHash;
     private Integer idRol;
+    private String nombreRol;
 
     public Integer getId() {
         return id;
@@ -64,5 +65,13 @@ public class UsuarioDTO {
 
     public void setIdRol(Integer idRol) {
         this.idRol = idRol;
+    }
+
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
     }
 }

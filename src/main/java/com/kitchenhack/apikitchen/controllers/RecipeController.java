@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -34,6 +35,7 @@ public class RecipeController {
     private IIngredienteService ingredienteService;
 
     // 1. Endpoint para ListarTodo
+    @PreAuthorize("hasAnyAuthority('usuario', 'nutricionista', 'admin')")
     @GetMapping
     public ResponseEntity<?> listar() {
         List<Recipe> recetas = recipeService.list();
@@ -47,6 +49,7 @@ public class RecipeController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('usuario', 'nutricionista', 'admin')")
     @GetMapping("/estadisticas-dificultad")
     public ResponseEntity<?> obtenerEstadisticasDificultad() {
         List<Object[]> lista = recipeService.getRecipeStatsByDifficulty();
@@ -87,6 +90,7 @@ public class RecipeController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('usuario', 'nutricionista', 'admin')")
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorIdCompleto(@PathVariable Integer id) {
         Optional<Recipe> opt = recipeService.listId(id);
@@ -129,6 +133,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody RecipeDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -172,6 +177,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody RecipeDTO dto) {
         Optional<Recipe> existente = recipeService.listId(id);
@@ -207,6 +213,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         Optional<Recipe> existente = recipeService.listId(id);
@@ -218,6 +225,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @PostMapping("/{id}/detalle")
     public ResponseEntity<?> agregarDetalle(@PathVariable Integer id, @RequestBody RecetaDetalleDTO dto) {
         Optional<Recipe> recetaOpt = recipeService.listId(id);
@@ -265,6 +273,7 @@ public class RecipeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @DeleteMapping("/detalle/{detalleId}")
     public ResponseEntity<?> eliminarDetalle(@PathVariable Integer detalleId) {
         try {
@@ -276,6 +285,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('nutricionista', 'admin')")
     @PutMapping("/detalle/{id}/orden/{nuevoOrden}")
     public ResponseEntity<?> cambiarOrden(@PathVariable Integer id, @PathVariable Integer nuevoOrden) {
         try {
