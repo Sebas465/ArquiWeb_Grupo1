@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class EjercicioController {
 
     // US-P4-02 — Listar todos los ejercicios del catálogo
     // GET /ejercicios → 200 con lista, o 404 si el catálogo está vacío
+    @PreAuthorize("hasAnyAuthority('usuario', 'entrenador', 'admin')")
     @GetMapping
     public ResponseEntity<?> listarEjercicios() {
         List<Ejercicio> lista = ejercicioService.list();
@@ -46,6 +48,7 @@ public class EjercicioController {
 
     // US-P4-01 — Registrar un nuevo ejercicio en el catálogo
     // POST /ejercicios/nuevo → 201 con el ejercicio creado, o 400 si falta el nombre
+    @PreAuthorize("hasAnyAuthority('entrenador', 'admin')")
     @PostMapping("/nuevo")
     public ResponseEntity<?> registrarEjercicio(@RequestBody EjercicioDTO dto) {
 
@@ -78,6 +81,7 @@ public class EjercicioController {
 
     // CRUD — Buscar ejercicio por ID
     // GET /ejercicios/detalle/{id} → 200 con el ejercicio, o 404 si no existe
+    @PreAuthorize("hasAnyAuthority('usuario', 'entrenador', 'admin')")
     @GetMapping("/detalle/{id}")
     public ResponseEntity<?> buscarEjercicio(@PathVariable Integer id) {
         Optional<Ejercicio> opt = ejercicioService.listId(id);
@@ -94,6 +98,7 @@ public class EjercicioController {
 
     // CRUD — Actualizar un ejercicio existente
     // PUT /ejercicios/actualizar/{id} → 200 con mensaje, o 404 si no existe
+    @PreAuthorize("hasAnyAuthority('entrenador', 'admin')")
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> actualizarEjercicio(@PathVariable Integer id, @RequestBody EjercicioDTO dto) {
         Optional<Ejercicio> opt = ejercicioService.listId(id);
@@ -125,6 +130,7 @@ public class EjercicioController {
 
     // CRUD — Eliminar un ejercicio del catálogo
     // DELETE /ejercicios/eliminar/{id} → 200 con mensaje, o 404 si no existe
+    @PreAuthorize("hasAnyAuthority('entrenador', 'admin')")
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarEjercicio(@PathVariable Integer id) {
         Optional<Ejercicio> opt = ejercicioService.listId(id);

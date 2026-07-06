@@ -39,4 +39,14 @@ public class UsuarioServiceImplement implements IUsuarioService {
     public List<Usuario> list() {
         return uR.findAll();
     }
+
+    @Override
+    public void update(Usuario usuario) {
+        uR.save(usuario);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        uR.deleteById(id);
+    }
 }
