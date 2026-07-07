@@ -3,6 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+oracleJdk-26/
 
 ### STS ###
 .apt_generated
@@ -60,6 +61,7 @@ planes-lista.png
 .playwright-mcp/page-2026-06-24T13-11-03-437Z.yml
 .playwright-mcp/page-2026-06-24T13-11-14-190Z.yml
 .gitignore
+src/main/resources/application.properties
 src/main/resources/application.properties
 src/main/resources/application.properties
 src/main/resources/application.properties
